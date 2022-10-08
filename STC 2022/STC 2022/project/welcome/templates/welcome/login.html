@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>hello world! You are at the login page</p>
+<form>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Username</label>
+        <input type="username" class="form-control" id="exampleInputUsername1" placeholder="Enter Username">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+    </div>
+    <button type="submit" class="btn btn-primary">Log in</button>
+
+    <p>Dont have an account? Sign up here</p>
+    <a class="btn btn-primary" href="{% url 'welcome:signup' %}" role="button">Sign up</a>
+</form>
+{% endblock %}
