@@ -4,3 +4,8 @@ from django.shortcuts import render
 def home(request):
     template = "index.html"
     return render(request, template)
+
+
+def login(request):
+    template = "welcome/login.html"
+    return render(request, template)
