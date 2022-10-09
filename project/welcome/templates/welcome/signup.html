@@ -6,7 +6,7 @@
     <div class="form-group">
         <label for="exampleInputEmail1">Username</label>
         <input type="username" class="form-control" id="InputUsername1" placeholder="Enter Username">
-        {% if usernameexists %}
+        {% if usernameExists %}
         <small id="usernameExists" class="'form-text text-muted">Username already taken</small>
         {% endif %}
     </div>
@@ -17,6 +17,9 @@
     <div class="form-group">
         <label for="exampleInputPassword1">Confirm Password</label>
         <input type="password" class="form-control" id="InputPassword2" placeholder="Confirm Password">
+        {% if noPasswordMatch %}
+        <small id="noPasswordMatch" class="'form-text text-muted">Passwords do not match</small>
+        {% endif %}
     </div>
     <button type="submit" class="btn btn-primary">Log in</button>
 

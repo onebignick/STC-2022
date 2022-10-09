@@ -41,13 +41,17 @@ def login(request):
 
 def signup(request):
     template = "welcome/signup.html"
+    context = {
+        "title": "Sign up page",
+    }
     if request.method == "GET":
-        return render(request, template)
+        return render(request, template, context)
     elif request.method == "POST":
         username = request.POST.get("InputUsername1")
         password = request.POST.get("InputPassword1")
         password_confirm = request.POST.get("InputPassword2")
+
+        # If passwords don't match
         if password != password_confirm:
-            context = {"passwordNoMatch": True}
-            return render(request, template, context)
+            context["noPasswordMatch"] = True
         return render(request, template, context)
