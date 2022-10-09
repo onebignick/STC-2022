@@ -29,8 +29,8 @@ compiled_sol = compile_standard(
     solc_version="0.8.7",
 )
 
-with open("compiled_code.json", "w") as file:
-    json.dump(compiled_sol, file)
+# with open("compiled_code.json", "w") as file:
+#    json.dump(compiled_sol, file)
 
 # Bytecode
 bytecode = compiled_sol["contracts"]["db.sol"]["passwordStorage"]["evm"]["bytecode"][
@@ -43,6 +43,8 @@ abi = json.loads(compiled_sol["contracts"]["db.sol"]["passwordStorage"]["metadat
 ]["abi"]
 
 # For connecting to Sepolia
+# w3 = Web3(Web3.HTTPProvider("https://rpc.sepolia.dev"))
+# chain_id = 11155111
 
 # For connecting to ganache
 w3 = Web3(Web3.HTTPProvider("HTTP://127.0.0.1:7545"))
