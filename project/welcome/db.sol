@@ -2,29 +2,31 @@
 
 pragma solidity ^0.8.7;
 
-contract Storage {
-    string passwordHash;
-
-    struct Passwords {
-        string passwordHash;
-        string name;
+contract passwordStorage {
+    struct Password {
+        string username;
+        string password;
     }
 
-    Passwords[] public password;
-    mapping(string => string) public userToPassword;
+    Password[] public Passwords;
 
-    function store(string memory _passwordHash) public {
-        passwordHash = _passwordHash;
-    }
-
-    function retrieve() public view returns (string memory) {
-        return passwordHash;
-    }
-
-    function addPassword(string memory _username, string memory _passwordHash)
-        public
+    function create(string calldata _username, string calldata _password)
+        external
     {
-        password.push(Passwords(_passwordHash, _username));
-        userToPassword[_username] = _passwordHash;
+        Passwords.push(Password({username: _username, password: _password}));
+    }
+
+    function update(uint _index, string calldata _password) external {
+        Password storage password = Passwords[_index];
+        password.password = _password;
+    }
+
+    function get(uint _index)
+        external
+        view
+        returns (string memory, string memory)
+    {
+        Password memory password = Passwords[_index];
+        return (password.username, password.password);
     }
 }
