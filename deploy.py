@@ -1,10 +1,7 @@
 import json
-from numpy import sign
-
 from web3 import Web3
 
 from solcx import compile_standard, install_solc
-import os
 from web3.middleware import geth_poa_middleware
 
 with open("./db.sol", "r") as file:
