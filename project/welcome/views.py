@@ -50,7 +50,7 @@ def signup(request):
         username = request.POST.get("InputUsername1")
         password = request.POST.get("InputPassword1")
         password_confirm = request.POST.get("InputPassword2")
-
+        print(username)
         # If passwords don't match
         if password != password_confirm:
             context["noPasswordMatch"] = True
