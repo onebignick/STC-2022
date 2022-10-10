@@ -2,7 +2,8 @@
 
 {% block content %}
 <p>hello world! You are at the signup page</p>
-<form>
+<form method="POST" action="">
+    {% csrf_token %}
     <div class="form-group">
         <label for="exampleInputEmail1">Username</label>
         <input type="username" class="form-control" id="InputUsername1" placeholder="Enter Username">

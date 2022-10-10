@@ -47,9 +47,16 @@ def signup(request):
     if request.method == "GET":
         return render(request, template, context)
     elif request.method == "POST":
+
         username = request.POST.get("InputUsername1")
+        request.session["username"] = username
+
         password = request.POST.get("InputPassword1")
+        request.session["password"] = password
+
         password_confirm = request.POST.get("InputPassword2")
+        request.session["password_confirm"] = password_confirm
+
         print(username)
         # If passwords don't match
         if password != password_confirm:
