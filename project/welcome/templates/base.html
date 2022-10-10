@@ -42,12 +42,21 @@
         </div>
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ms-auto">
+                {% if loggedin %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'welcome:Username' %}">{{ username }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'welcome:Logout' %}">Logout</a>
+                </li>
+                {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'welcome:login' %}">Log in</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'welcome:signup' %}">Sign Up</a>
                 </li>
+                {% endif %}
             </ul>
         </div>
     </nav>
