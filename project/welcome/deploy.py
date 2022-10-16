@@ -26,8 +26,8 @@ compiled_sol = compile_standard(
     solc_version="0.8.7",
 )
 
-# with open("compiled_code.json", "w") as file:
-#    json.dump(compiled_sol, file)
+with open("compiled_code.json", "w") as file:
+    json.dump(compiled_sol, file)
 
 # Bytecode
 bytecode = compiled_sol["contracts"]["db.sol"]["passwordStorage"]["evm"]["bytecode"][
@@ -77,3 +77,15 @@ tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
 print("Waiting for transaction to finish...")
 tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 print(f"Done! Contract deployed to {tx_receipt.contractAddress}")
+
+
+def get_contract_address():
+    return tx_receipt.contractAddress
+
+
+def get_bytecode():
+    return bytecode
+
+
+def get_abi():
+    return abi
