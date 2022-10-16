@@ -54,41 +54,47 @@ if chain_id == 11155111:  # Sepolia chain ID is 11155111
 my_address = "0x1667a684E0bD33EdeCf74EE86B52835312bd7eEA"
 private_key = "c9544cafe50f0cebcb512535e6a902fcae5ecddf7c5fd832d39ef2e645a6be56"
 
-# Creating the contract in python
-db = w3.eth.contract(abi=abi, bytecode=bytecode)
-# Get the latest transaction
-nonce = w3.eth.getTransactionCount(my_address)
-# Submit the transation that deploys the contract
-transaction = db.constructor().buildTransaction(
-    {
-        "chainId": chain_id,
-        "gasPrice": w3.eth.gas_price,
-        "from": my_address,
-        "nonce": nonce,
-    }
-)
 
-# Signing the transaction
-signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)
-print("Deploying Contract!")
-# Sending txn
-tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
-# Wait for the transaction to be mined, and get the transaction receipt
-print("Waiting for transaction to finish...")
-tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
-print(f"Done! Contract deployed to {tx_receipt.contractAddress}")
+def deploy():
+    # Creating the contract in python
+    db = w3.eth.contract(abi=abi, bytecode=bytecode)
+    # Get the latest transaction
+    nonce = w3.eth.getTransactionCount(my_address)
+    # Submit the transation that deploys the contract
+    transaction = db.constructor().buildTransaction(
+        {
+            "chainId": chain_id,
+            "gasPrice": w3.eth.gas_price,
+            "from": my_address,
+            "nonce": nonce,
+        }
+    )
 
-db = w3.eth.contract(address=tx_receipt.contractAddress, abi=abi)
+    # Signing the transaction
+    signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)
+    print("Deploying Contract!")
+    # Sending txn
+    tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+    # Wait for the transaction to be mined, and get the transaction receipt
+    print("Waiting for transaction to finish...")
+    tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+    print(f"Done! Contract deployed to {tx_receipt.contractAddress}")
+
+
+# Change this to tx_receipt.contractAddress when deploy is run
+contract_address = "0xb865c4979d0090c8d4A14e953baF2186c63A667d"
+
+db = w3.eth.contract(address=contract_address, abi=abi)
 
 
 def createNewUser(username, password):
-    nonce = w3.eth.getTransactionCount
+    nonce = w3.eth.getTransactionCount(my_address)
     transaction = db.functions.create_user(username, password).buildTransaction(
         {
             "chainId": chain_id,
             "gasPrice": w3.eth.gas_price,
             "from": my_address,
-            "nonce": nonce + 1,
+            "nonce": nonce,
         }
     )
     signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)
@@ -96,10 +102,11 @@ def createNewUser(username, password):
     print("Creating new User...")
     tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
     print("User Created!")
+    return True
 
 
 def updateUser(username, password):
-    nonce = w3.eth.getTransactionCount
+    nonce = w3.eth.getTransactionCount(my_address)
     transaction = db.functions.update_user_password(
         username, password
     ).buildTransaction(
@@ -107,7 +114,7 @@ def updateUser(username, password):
             "chainId": chain_id,
             "gasPrice": w3.eth.gas_price,
             "from": my_address,
-            "nonce": nonce + 1,
+            "nonce": nonce,
         }
     )
     signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)
