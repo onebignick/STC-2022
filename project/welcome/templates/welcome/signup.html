@@ -6,18 +6,20 @@
     {% csrf_token %}
     <div class="form-group">
         <label for="exampleInputEmail1">Username</label>
-        <input type="username" class="form-control" id="InputUsername1" placeholder="Enter Username">
+        <input name="signUpUsername1" type="username" class="form-control" id="signUpUsername1"
+            placeholder="Enter Username">
         {% if usernameExists %}
         <small id="usernameExists" class="'form-text text-muted">Username already taken</small>
         {% endif %}
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">Password</label>
-        <input type="password" class="form-control" id="InputPassword1" placeholder="Password">
+        <input name="signUpPassword1" type="password" class="form-control" id="signUpPassword1" placeholder="Password">
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">Confirm Password</label>
-        <input type="password" class="form-control" id="InputPassword2" placeholder="Confirm Password">
+        <input name="signUpPassword2" type="password" class="form-control" id="signUpPassword2"
+            placeholder="Confirm Password">
         {% if noPasswordMatch %}
         <small id="noPasswordMatch" class="'form-text text-muted">Passwords do not match</small>
         {% endif %}
