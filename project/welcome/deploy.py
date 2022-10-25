@@ -79,10 +79,11 @@ def deploy():
     print("Waiting for transaction to finish...")
     tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
     print(f"Done! Contract deployed to {tx_receipt.contractAddress}")
+    return tx_receipt.contractAddress
 
 
-# Change this to tx_receipt.contractAddress when deploy is run
-contract_address = "0xb865c4979d0090c8d4A14e953baF2186c63A667d"
+# Changes this to tx_receipt.contractAddress when deploy is run
+contract_address = deploy()
 
 db = w3.eth.contract(address=contract_address, abi=abi)
 
