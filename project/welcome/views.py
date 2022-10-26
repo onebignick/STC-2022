@@ -74,12 +74,14 @@ def signup(request):
         # Else username is already taken
         else:
             context["usernameExists"] = True
-        return render(request, template, context)
 
         # Hash information and add to blockchain
         digest = hashinfo(password, username) # Username acting as salt
+        return render(request, template, context)
 
         
+
+
 
 
 
