@@ -1,4 +1,5 @@
 import welcome.deploy as deploy
+from hashlib import sha512
 
 # Django imports here
 from django.shortcuts import render, redirect, HttpResponse
@@ -74,3 +75,23 @@ def signup(request):
         else:
             context["usernameExists"] = True
         return render(request, template, context)
+
+        # Hash information and add to blockchain
+        digest = hashinfo(password, username) # Username acting as salt
+
+        
+
+
+
+def dashboard(request):
+    template = "welcome/dashboard.html"
+    context = {
+        "title": "Dashboard",
+    }
+    return render(request, template, context)
+
+def hashinfo(*args):
+    hash = sha512()
+    for arg in args:
+        hash.update(arg.encode())
+    return hash.hexdigest()
