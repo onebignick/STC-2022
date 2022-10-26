@@ -11,7 +11,35 @@ def home(request):
 
 def login(request):
     template = "welcome/login.html"
-    return render(request, template)
+    context = {
+        "title": "Login page",
+    }
+
+    if request.method == "GET":
+        return render(request, template, context)
+
+    elif request.method == "POST":
+        # Get variables in the form
+        username = request.POST.get("exampleInputUsername1")
+        # request.session["username"] = username
+
+        password = request.POST.get("exampleInputPassword1")
+        # request.session["password"] = password
+
+        #if username does not exist
+        if deploy.findPassword(username) == "0":
+                print("User does not exist")
+                context["usernameExists"] = True
+                return render(request, template, context)
+
+        #if password does not match user
+        elif deploy.findPassword(username) != password:
+                print("Incorrect Password")
+                context["correctPassword"] = True
+                return render(request, template, context)
+
+
+        return render(request, template, context)
 
 
 def signup(request):
