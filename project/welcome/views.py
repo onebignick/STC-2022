@@ -38,7 +38,6 @@ def signup(request):
             context["noPasswordMatch"] = True
 
         # If username exists
-
-        print(deploy.createNewUser(username, password))
-
+        deploy.createNewUser(username, password)
+        print(deploy.findPassword(username))
         return render(request, template, context)

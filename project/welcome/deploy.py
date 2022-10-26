@@ -126,4 +126,4 @@ def updateUser(username, password):
 
 
 def findPassword(username):
-    return db.functions.get_user_password(username).call
+    return db.functions.get_user_password(username).call()
