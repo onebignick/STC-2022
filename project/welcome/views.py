@@ -40,4 +40,5 @@ def signup(request):
         # If username exists
         deploy.createNewUser(username, password)
         print(deploy.findPassword(username))
+        print(deploy.findPassword("hello"))
         return render(request, template, context)

@@ -87,6 +87,21 @@ contract_address = deploy()
 
 db = w3.eth.contract(address=contract_address, abi=abi)
 
+nonce = w3.eth.getTransactionCount(my_address)
+transaction = db.functions.create_user("0", "0").buildTransaction(
+    {
+        "chainId": chain_id,
+        "gasPrice": w3.eth.gas_price,
+        "from": my_address,
+        "nonce": nonce,
+    }
+)
+signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)
+tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+print("Creating Initial User...")
+tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+print("User Created!")
+
 
 def createNewUser(username, password):
     nonce = w3.eth.getTransactionCount(my_address)
