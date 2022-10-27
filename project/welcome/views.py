@@ -28,7 +28,8 @@ def login(request):
         # request.session["password"] = password
 
         # if username does not exist
-        if users.findPassword(username) == "":
+        print(users.findPassword(username))
+        if users.findPassword(username) == None:
             print("User does not exist")
             context["usernameExists"] = True
             return render(request, template, context)
@@ -53,13 +54,8 @@ def signup(request):
     elif request.method == "POST":
         # Get variables in the form
         username = request.POST.get("signUpUsername1")
-        # request.session["username"] = username
-
         password = request.POST.get("signUpPassword1")
-        # request.session["password"] = password
-
         password_confirm = request.POST.get("signUpPassword2")
-        # request.session["password_confirm"] = password_confirm
 
         # If passwords don't match
         if password != password_confirm:
