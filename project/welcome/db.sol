@@ -1,40 +1,121 @@
 // SPDX-License-Identifier: MIT
+pragma solidity 0.8.7;
 
-pragma solidity ^0.8.7;
+contract Session {
+    string public user;
+    uint256 public login_datetime = 0;
+    uint256 public logout_datetime = 0;
 
-contract userData {
-    // Data structure of each user
-    struct user {
-        string username;
+    constructor(string memory username, uint256 login) {
+        user = username;
+        login_datetime = login;
+    }
+
+    function logoutSession(uint256 logout) public {
+        logout_datetime = logout;
+    }
+}
+
+contract Users {
+    event LoginEvent(address value);
+    event LogoutEvent(string value);
+
+    struct UserData {
+        string user;
         string password;
     }
 
-    // Hash each username to data
-    mapping(string => uint256) UserID;
-    user[] public Users;
+    mapping(string => UserData) private users;
+    mapping(string => address[]) private sessions;
+    string[] lookup;
 
-    function create_user(string calldata _username, string calldata _password)
+    constructor() {}
+
+    function getUser(string memory key)
         public
-    {
-        Users.push(user({username: _username, password: _password}));
-        uint256 _userID = Users.length - 1;
-        UserID[_username] = _userID;
-    }
-
-    function update_user_password(
-        string calldata _username,
-        string calldata _password
-    ) public {
-        uint256 _userID = UserID[_username];
-        Users[_userID].password = _password;
-    }
-
-    function get_user_password(string calldata _username)
-        external
         view
-        returns (string memory)
+        returns (string memory user, string memory password)
     {
-        uint256 _userID = UserID[_username];
-        return (Users[_userID].password);
+        return (users[key].user, users[key].password);
+    }
+
+    function login(string memory user, string memory password) public {
+        bool result = compareStrings(users[user].password, password);
+
+        if (result) {
+            Session session = new Session(user, block.timestamp);
+            sessions[user].push(address(session));
+            emit LoginEvent(address(session));
+        } else {
+            emit LoginEvent(address(0));
+        }
+    }
+
+    function logout(string memory user, address session) public returns (bool) {
+        address[] storage sessionList = sessions[user];
+        for (uint256 i = 0; i < sessionList.length; i++) {
+            if (sessionList[i] == session) {
+                Session(sessionList[i]).logoutSession(block.timestamp);
+                sessionList[i] = sessionList[sessionList.length - 1];
+                sessionList.pop();
+                emit LogoutEvent("logout successful");
+                return true;
+            }
+        }
+
+        emit LogoutEvent("logout failed");
+        return false;
+    }
+
+    function getAllUsers() public view returns (UserData[] memory) {
+        UserData[] memory allUsers = new UserData[](lookup.length);
+        for (uint256 i = 0; i < lookup.length; i++) {
+            allUsers[i] = users[lookup[i]];
+        }
+        return allUsers;
+    }
+
+    function addUser(string memory user, string memory password) public {
+        require(compareStrings(users[user].user, ""), "User already exists.");
+        UserData memory newUser = UserData(user, password);
+        users[user] = newUser;
+        lookup.push(user);
+    }
+
+    // function updateUser(string memory user, string memory role) public {
+    //     UserData storage updated = users[user];
+    //     users[user].role = role;
+    //     users[user] = updated;
+    // }
+
+    function updatePassword(
+        string memory user,
+        string memory old_password,
+        string memory new_password
+    ) public {
+        require(
+            compareStrings(old_password, users[user].password),
+            "Wrong password"
+        );
+        users[user].password = new_password;
+    }
+
+    function compareStrings(string memory a, string memory b)
+        public
+        pure
+        returns (bool)
+    {
+        return (keccak256(abi.encodePacked((a))) ==
+            keccak256(abi.encodePacked((b))));
+    }
+
+    function deleteUser(string memory user) public {
+        delete users[user];
+        for (uint256 i = 0; i < lookup.length; i++) {
+            if (compareStrings(lookup[i], user)) {
+                lookup[i] = lookup[lookup.length - 1];
+                lookup.pop();
+            }
+        }
     }
 }

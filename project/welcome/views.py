@@ -1,4 +1,4 @@
-import welcome.deploy as deploy
+import welcome.functions as users
 from hashlib import sha512
 
 # Django imports here
@@ -27,18 +27,17 @@ def login(request):
         password = request.POST.get("exampleInputPassword1")
         # request.session["password"] = password
 
-        #if username does not exist
-        if deploy.findPassword(username) == "0":
-                print("User does not exist")
-                context["usernameExists"] = True
-                return render(request, template, context)
+        # if username does not exist
+        if users.findPassword(username) == "":
+            print("User does not exist")
+            context["usernameExists"] = True
+            return render(request, template, context)
 
-        #if password does not match user
-        elif deploy.findPassword(username) != password:
-                print("Incorrect Password")
-                context["correctPassword"] = True
-                return render(request, template, context)
-
+        # if password does not match user
+        elif users.findPassword(username) != password:
+            print("Incorrect Password")
+            context["correctPassword"] = True
+            return render(request, template, context)
 
         return render(request, template, context)
 
@@ -68,21 +67,15 @@ def signup(request):
             return render(request, template, context)
 
         # If username doesn't exist create new user
-        if deploy.findPassword(username) == "0":
-            deploy.createNewUser(username, password)
-
-        # Else username is already taken
-        else:
+        try:
+            users.createNewUser(username, password)
+        # Username is taken
+        except:
             context["usernameExists"] = True
 
         # Hash information and add to blockchain
-        digest = hashinfo(password, username) # Username acting as salt
+        digest = hashinfo(password, username)  # Username acting as salt
         return render(request, template, context)
-
-        
-
-
-
 
 
 def dashboard(request):
@@ -91,6 +84,7 @@ def dashboard(request):
         "title": "Dashboard",
     }
     return render(request, template, context)
+
 
 def hashinfo(*args):
     hash = sha512()
