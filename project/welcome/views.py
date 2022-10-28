@@ -59,14 +59,15 @@ def signup(request):
 
         # If username doesn't exist create new user
         try:
+            # Hash information and add to blockchain
             users.createNewUser(username, password)
         # Username is taken
         except:
             context["usernameExists"] = True
-
-        # Hash information and add to blockchain
-        return render(request, template, context)
-
+            return render(request, template, context)
+            
+        return redirect(login)
+       
 
 def dashboard(request):
     template = "welcome/dashboard.html"

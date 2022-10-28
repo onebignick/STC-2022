@@ -108,7 +108,9 @@
     color: #03e9f4;
   }
 
-
+  small{
+      color: red;
+  }
 </style>
 
 <body>
@@ -120,14 +122,14 @@
                 <label for="exampleInputEmail1"></label>
                 <input name="exampleInputUsername1" type="username" class="form-control" id="exampleInputUsername1" placeholder="Username" required="">
                 {% if usernameExists %}
-                <small id="usernameExists" class="'form-text text-muted">Username does not exist</small>
+                <small id="usernameExists" class="'form-text text-muted">Invalid username or password</small>
                 {% endif %}
             </div>
             <div class="user-box">
                 <label for="exampleInputPassword1"></label>
                 <input name="exampleInputPassword1" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" required="">
                 {% if correctPassword %}
-                <small id="correctPassword" class="'form-text text-muted">Incorrect Password</small>
+                <small id="correctPassword" class="'form-text text-muted">Invalid username or password</small>
                 {% endif %}
             </div>
             <button type="submit" class="btn btn-primary">GO BIG</button>

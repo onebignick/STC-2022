@@ -98,43 +98,56 @@
                 0 0 100px #03e9f4;
   }
 
-  .login-box .signupbtn{
+  .login-box .loginbtn{
+    margin-top: 50px;
     float: right;
-    margin-top: 15px;
     color: #fff;
   }
 
-  .login-box .signupbtn:hover{
+  .login-box .loginbtn:hover{
     color: #03e9f4;
+  }
+
+  p{
+    float: left;
+    margin-top: 30px;
+    color: white;
+  }
+
+  small{
+      color: red;
   }
 </style>
 <body>
-  <form method="POST" action="">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="exampleInputEmail1">Username</label>
-        <input name="signUpUsername1" type="username" class="form-control" id="signUpUsername1"
-            placeholder="Enter Username">
-        {% if usernameExists %}
-        <small id="usernameExists" class="'form-text text-muted">Username already taken</small>
-        {% endif %}
-    </div>
-    <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
-        <input name="signUpPassword1" type="password" class="form-control" id="signUpPassword1" placeholder="Password">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputPassword1">Confirm Password</label>
-        <input name="signUpPassword2" type="password" class="form-control" id="signUpPassword2"
-            placeholder="Confirm Password">
-        {% if noPasswordMatch %}
-        <small id="noPasswordMatch" class="'form-text text-muted">Passwords do not match</small>
-        {% endif %}
-    </div>
-    <button type="submit" class="btn btn-primary">Create User</button>
-
-    <p>Already have an account? Log in here</p>
-    <a class="btn btn-primary" href="{% url 'login' %}" role="button">Log in</a>
-  </form>
+  <div class="login-box">
+    <h2>Create a User</h2>
+    <form method="POST" action="">
+      {% csrf_token %}
+      <div class="user-box">
+          <label for="exampleInputEmail1"></label>
+          <input name="signUpUsername1" type="username" class="form-control" id="signUpUsername1"
+              placeholder="Username" required="">
+          {% if usernameExists %}
+          <small id="usernameExists" class="'form-text text-muted">Username already taken</small>
+          {% endif %}
+      </div>
+      <div class="user-box">
+          <label for="exampleInputPassword1"></label>
+          <input name="signUpPassword1" type="password" class="form-control" id="signUpPassword1" placeholder="Password" required="">
+      </div>
+      <div class="user-box">
+          <label for="exampleInputPassword1"></label>
+          <input name="signUpPassword2" type="password" class="form-control" id="signUpPassword2"
+              placeholder="Confirm Password" required="">
+          {% if noPasswordMatch %}
+          <small id="noPasswordMatch" class="'form-text text-muted">Passwords do not match</small>
+          {% endif %}
+      </div>
+      <button type="submit" class="btn btn-primary">Sign up</button>
+  
+      <p>Already have an account?</p>
+      <a class="loginbtn" href="{% url 'login' %}" role="button">Log in</a>
+    </form>
+  </div>
 </body>
 </html>
