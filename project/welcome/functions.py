@@ -178,15 +178,20 @@ def login(username, password):
     processed_log = db.events.LoginEvent().processLog(log_to_process)
     session = processed_log["args"]["value"]
     print(session)
-    print(f"Done! User: {username} logged in")
+    if session != "0x0000000000000000000000000000000000000000":
+        print(f"Done! User: {username} logged in")
+    else:
+        print("Error! Username or password incorrect")
 
 
 def logout(username, password):
     pass
 
 
-createNewUser("k", "jk")
-login("k", "jk")
-login("k", "l")
+# createNewUser("k", "jk")
+# login("k", "jk")
+# login("k", "l")
 # output :0x0000000000000000000000000000000000000000
-deleteUser("k")
+# login("l", "l")
+# output :0x0000000000000000000000000000000000000000
+# deleteUser("k")

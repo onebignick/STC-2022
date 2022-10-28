@@ -15,24 +15,18 @@ def login(request):
         return render(request, template, context)
 
     elif request.method == "POST":
+
         # Get variables in the form
         username = request.POST.get("exampleInputUsername1")
-        # request.session["username"] = username
-
-        password = request.POST.get("exampleInputPassword1")
-        # request.session["password"] = password
+        password = hashinfo(request.POST.get("exampleInputPassword1"), username)
 
         # if username does not exist
-        print(users.findPassword(username))
-        if users.findPassword(username) == None:
-            print("User does not exist")
-            context["usernameExists"] = True
-            return render(request, template, context)
-
-        # if password does not match user
-        elif users.findPassword(username) != hashinfo(password, username):
-            print("Incorrect Password")
-            context["correctPassword"] = True
+        if (
+            users.login(username, password)
+            == "0x0000000000000000000000000000000000000000"
+        ):
+            print("Error! Username or password incorrect")
+            context["incorrectDetails"] = True
             return render(request, template, context)
 
         return render(request, template, context)
@@ -65,9 +59,9 @@ def signup(request):
         except:
             context["usernameExists"] = True
             return render(request, template, context)
-            
+
         return redirect(login)
-       
+
 
 def dashboard(request):
     template = "welcome/dashboard.html"
