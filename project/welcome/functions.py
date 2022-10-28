@@ -144,3 +144,11 @@ def deleteUser(username):
     print("Waiting for transaction to finish...")
     tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
     print(f"Done! User: {username} deleted")
+
+
+def login(username, password):
+    pass
+
+
+def logout(username, password):
+    pass

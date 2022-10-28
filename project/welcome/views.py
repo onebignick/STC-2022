@@ -35,7 +35,7 @@ def login(request):
             return render(request, template, context)
 
         # if password does not match user
-        elif users.findPassword(username) != password:
+        elif users.findPassword(username) != hashinfo(password, username):
             print("Incorrect Password")
             context["correctPassword"] = True
             return render(request, template, context)

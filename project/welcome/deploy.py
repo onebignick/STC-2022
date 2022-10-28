@@ -92,6 +92,6 @@ print(f"Done! Contract deployed to {tx_receipt.contractAddress}")
 f = open("./project/welcome/contractaddress.txt", "w")
 f.close()
 
-# write users contract address
+# write Users contract address
 f = open("./project/welcome/contractaddress.txt", "w")
 f.write(tx_receipt.contractAddress)
