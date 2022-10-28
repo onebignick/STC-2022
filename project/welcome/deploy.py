@@ -31,15 +31,19 @@ compiled_sol = compile_standard(
 )
 
 # with open("./project/welcome/compiled_code.json", "w") as file:
-#    json.dump(compiled_sol, file)
+# json.dump(compiled_sol, file)
 
 # Bytecode
-bytecode = compiled_sol["contracts"]["db.sol"]["Users"]["evm"]["bytecode"]["object"]
+users_bytecode = compiled_sol["contracts"]["db.sol"]["Users"]["evm"]["bytecode"][
+    "object"
+]
+# sessions_bytecode = compiled_sol["contracts"]["db.sol"]["Session"]["evm"]["bytecode"]["object"]
 
 # Abi
-abi = json.loads(compiled_sol["contracts"]["db.sol"]["Users"]["metadata"])["output"][
-    "abi"
-]
+users_abi = json.loads(compiled_sol["contracts"]["db.sol"]["Users"]["metadata"])[
+    "output"
+]["abi"]
+# sessions_abi = json.loads(compiled_sol["contracts"]["db.sol"]["Session"]["metadata"])["output"]["abi"]
 
 # For connecting to Sepolia
 # w3 = Web3(Web3.HTTPProvider("https://rpc.sepolia.dev"))
@@ -60,8 +64,8 @@ private_key = "c9544cafe50f0cebcb512535e6a902fcae5ecddf7c5fd832d39ef2e645a6be56"
 # 0xE5ce067301e150F27F50Eb58ae078A80ab987183
 # 36230e823372730c5225d10470fef124aaa6a1a2f4286f78b5eba097c8af0653
 
-# Creating the contract in python
-db = w3.eth.contract(abi=abi, bytecode=bytecode)
+# Creating the users contract in python
+db = w3.eth.contract(abi=users_abi, bytecode=users_bytecode)
 # Get the latest transaction
 nonce = w3.eth.getTransactionCount(my_address)
 # Submit the transation that deploys the contract
@@ -84,5 +88,10 @@ print("Waiting for transaction to finish...")
 tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 print(f"Done! Contract deployed to {tx_receipt.contractAddress}")
 
+# Erase any exisiting data in the file
+f = open("./project/welcome/contractaddress.txt", "w")
+f.close()
+
+# write users contract address
 f = open("./project/welcome/contractaddress.txt", "w")
 f.write(tx_receipt.contractAddress)

@@ -93,7 +93,29 @@ def createNewUser(username, password):
 
 # Function updateUser updates the password of existing user
 def updateUser(username, old_password, new_password):
-    pass
+    print(
+        f"Attempting to update user: {username} from password: {old_password} to {new_password}"
+    )
+    nonce = w3.eth.getTransactionCount(my_address)
+    transaction = db.functions.updateUser(
+        username, old_password, new_password
+    ).buildTransaction(
+        {
+            "chainId": chain_id,
+            "gasPrice": w3.eth.gas_price,
+            "from": my_address,
+            "nonce": nonce,
+        }
+    )
+    # Signing the transaction
+    signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)
+    print("Sending Transaction!")
+    # Sending txn
+    tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+    # Wait for the transaction to be mined, and get the transaction receipt
+    print("Waiting for transaction to finish...")
+    tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+    print(f"Done! User: {username} updated with password: {new_password}")
 
 
 # Function findPassword retrives password of existing user

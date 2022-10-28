@@ -54,8 +54,8 @@ def signup(request):
     elif request.method == "POST":
         # Get variables in the form
         username = request.POST.get("signUpUsername1")
-        password = request.POST.get("signUpPassword1")
-        password_confirm = request.POST.get("signUpPassword2")
+        password = hashinfo(request.POST.get("signUpPassword1"), username)
+        password_confirm = hashinfo(request.POST.get("signUpPassword2"), username)
 
         # If passwords don't match
         if password != password_confirm:
@@ -70,7 +70,6 @@ def signup(request):
             context["usernameExists"] = True
 
         # Hash information and add to blockchain
-        digest = hashinfo(password, username)  # Username acting as salt
         return render(request, template, context)
 
 
