@@ -5,13 +5,8 @@ from hashlib import sha512
 from django.shortcuts import render, redirect, HttpResponse
 
 # Create your views here.
-def home(request):
-    template = "index.html"
-    return render(request, template)
-
-
 def login(request):
-    template = "welcome/login.html"
+    template = "login.html"
     context = {
         "title": "Login page",
     }
@@ -44,7 +39,7 @@ def login(request):
 
 
 def signup(request):
-    template = "welcome/signup.html"
+    template = "signup.html"
     context = {
         "title": "Sign up page",
     }
