@@ -34,13 +34,22 @@ compiled_sol = compile_standard(
 # with open("./project/welcome/compiled_code.json", "w") as file:
 # json.dump(compiled_sol, file)
 
-# Bytecode
-bytecode = compiled_sol["contracts"]["db.sol"]["Users"]["evm"]["bytecode"]["object"]
+# Bytecodes
+session_bytecode = compiled_sol["contracts"]["db.sol"]["Session"]["evm"]["bytecode"][
+    "object"
+]
+users_bytecode = compiled_sol["contracts"]["db.sol"]["Users"]["evm"]["bytecode"][
+    "object"
+]
 
 # Abi
-abi = json.loads(compiled_sol["contracts"]["db.sol"]["Users"]["metadata"])["output"][
-    "abi"
-]
+session_abi = json.loads(compiled_sol["contracts"]["db.sol"]["Session"]["metadata"])[
+    "output"
+]["abi"]
+users_abi = json.loads(compiled_sol["contracts"]["db.sol"]["Users"]["metadata"])[
+    "output"
+]["abi"]
+
 
 # For connecting to Sepolia
 # w3 = Web3(Web3.HTTPProvider("https://rpc.sepolia.dev"))
@@ -67,8 +76,7 @@ p = Path(__file__).with_name("contractaddress.txt")
 with p.open("r") as file:
     contract_address = file.read()
 
-db = w3.eth.contract(address=contract_address, abi=abi)
-
+db = w3.eth.contract(address=contract_address, abi=users_abi)
 # function to handle event
 def handle_event(event):
     receipt = w3.eth.waitForTransactionReceipt(event["transactionHash"])
@@ -182,14 +190,22 @@ def login(username, password):
         print(f"Done! User: {username} logged in")
     else:
         print("Error! Username or password incorrect")
+    return session
 
 
 def logout(username, password):
     pass
 
 
+def getLoginDatetime(session):
+    session_contract = w3.eth.contract(address=session, abi=session_abi)
+    print(session_contract.functions.getLoginDatetime().call())
+
+
+# deleteUser("k")
 # createNewUser("k", "jk")
-# login("k", "jk")
+# session = login("k", "jk")
+# getLoginDatetime(session)
 # login("k", "l")
 # output :0x0000000000000000000000000000000000000000
 # login("l", "l")

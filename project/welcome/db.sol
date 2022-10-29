@@ -14,6 +14,14 @@ contract Session {
     function logoutSession(uint256 logout) public {
         logout_datetime = logout;
     }
+
+    function getLoginDatetime() public view returns (uint256) {
+        return login_datetime;
+    }
+
+    function getLogoutDatetime() public view returns (uint256) {
+        return logout_datetime;
+    }
 }
 
 contract Users {
