@@ -197,6 +197,11 @@ def logout(username, password):
     pass
 
 
+def getAllUsers():
+    print(db.functions.getAllUsers().call())
+    return db.functions.getAllUsers().call()
+
+
 def getLoginDatetime(session):
     session_contract = w3.eth.contract(address=session, abi=session_abi)
     print(session_contract.functions.getLoginDatetime().call())
@@ -204,6 +209,8 @@ def getLoginDatetime(session):
 
 # deleteUser("k")
 # createNewUser("k", "jk")
+# createNewUser("l", "l")
+# getAllUsers()
 # session = login("k", "jk")
 # getLoginDatetime(session)
 # login("k", "l")
@@ -211,3 +218,4 @@ def getLoginDatetime(session):
 # login("l", "l")
 # output :0x0000000000000000000000000000000000000000
 # deleteUser("k")
+# deleteUser("l")
