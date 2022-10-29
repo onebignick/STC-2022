@@ -63,12 +63,12 @@ if chain_id == 11155111:  # Sepolia chain ID is 11155111
     w3.middleware_onion.inject(geth_poa_middleware, layer=0)
     print(w3.clientVersion)
 
-#my_address = "0x1667a684E0bD33EdeCf74EE86B52835312bd7eEA"
-#private_key = "c9544cafe50f0cebcb512535e6a902fcae5ecddf7c5fd832d39ef2e645a6be56"
+my_address = "0x1667a684E0bD33EdeCf74EE86B52835312bd7eEA"
+private_key = "c9544cafe50f0cebcb512535e6a902fcae5ecddf7c5fd832d39ef2e645a6be56"
 
 # jons add and key
-my_address ="0xE5ce067301e150F27F50Eb58ae078A80ab987183" 
-private_key ="36230e823372730c5225d10470fef124aaa6a1a2f4286f78b5eba097c8af0653" 
+# my_address = "0xE5ce067301e150F27F50Eb58ae078A80ab987183"
+# private_key = "36230e823372730c5225d10470fef124aaa6a1a2f4286f78b5eba097c8af0653"
 
 # Get contract address of deployed contract
 p = Path(__file__).with_name("contractaddress.txt")
@@ -185,16 +185,41 @@ def login(username, password):
     log_to_process = tx_receipt["logs"][0]
     processed_log = db.events.LoginEvent().processLog(log_to_process)
     session = processed_log["args"]["value"]
-    print(session)
     if session != "0x0000000000000000000000000000000000000000":
-        print(f"Done! User: {username} logged in")
+        print(f"Done! User: {username} logged in at {session}")
     else:
         print("Error! Username or password incorrect")
     return session
 
 
-def logout(username, password):
-    pass
+def logout(username, session):
+    print(f"Attempting to logout user: {username}")
+    nonce = w3.eth.getTransactionCount(my_address)
+    transaction = db.functions.logout(username, session).buildTransaction(
+        {
+            "chainId": chain_id,
+            "gasPrice": w3.eth.gas_price,
+            "from": my_address,
+            "nonce": nonce,
+        }
+    )
+    # Signing the transaction
+    signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)
+    print("Sending Transaction!")
+    # Sending txn
+    tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+    # Wait for the transaction to be mined, and get the transaction receipt
+    print("Waiting for transaction to finish...")
+    tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+    # Process event
+    log_to_process = tx_receipt["logs"][0]
+    processed_log = db.events.LogoutEvent().processLog(log_to_process)
+    result = processed_log["args"]["value"]
+    return result
+
+
+def getSession(username):
+    return db.functions.getSession(username).call()
 
 
 def getAllUsers():
@@ -204,7 +229,12 @@ def getAllUsers():
 
 def getLoginDatetime(session):
     session_contract = w3.eth.contract(address=session, abi=session_abi)
-    print(session_contract.functions.getLoginDatetime().call())
+    return session_contract.functions.getLoginDatetime().call()
+
+
+def getLogoutDatetime(session):
+    session_contract = w3.eth.contract(address=session, abi=session_abi)
+    return session_contract.functions.getLogoutDatetime().call()
 
 
 # deleteUser("k")
@@ -212,10 +242,14 @@ def getLoginDatetime(session):
 # createNewUser("l", "l")
 # getAllUsers()
 # session = login("k", "jk")
-# getLoginDatetime(session)
+# login("k", "jk")
+# print(getSession("k"))
+# print(logout("k", session))
+# print(getLoginDatetime(session))
+# print(getLogoutDatetime(session))
+# print(getSession("k"))
 # login("k", "l")
 # output :0x0000000000000000000000000000000000000000
 # login("l", "l")
 # output :0x0000000000000000000000000000000000000000
 # deleteUser("k")
-# deleteUser("l")
