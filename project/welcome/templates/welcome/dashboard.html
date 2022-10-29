@@ -96,10 +96,10 @@ li a:hover:not(.active) {
 <body>
     <ul>
         <li><a class="current" href="#">BIG</a></li>
-        <li><a href="#">Accounts</a></li>
-        <li><a href="#">Sessions</a></li>
+        <li><a href="{% url 'welcome:accounts' %}">Accounts</a></li>
+        <li><a href="{% url 'welcome:sessions' %}">Sessions</a></li>
         <li style="float:right"><a class="active" href="#">Sign Out</a></li>
-      </ul>
+    </ul>
 
     <!-- clicker -->
     <div id="clicker">&#128051;</div>

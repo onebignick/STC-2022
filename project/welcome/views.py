@@ -70,6 +70,22 @@ def dashboard(request):
     }
     return render(request, template, context)
 
+def accounts(request):
+    template = "welcome/accounts.html"
+    context = {
+        "title": "Accounts",
+    }
+    return render(request, template, context)
+
+def sessions(request):
+    template = "welcome/sessions.html"
+    context = {
+        "title": "sessions",
+    }
+    return render(request, template, context)
+
+    
+
 
 def hashinfo(*args):
     hash = sha512()
