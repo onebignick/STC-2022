@@ -29,7 +29,7 @@ def login(request):
             context["incorrectDetails"] = True
             return render(request, template, context)
 
-        return render(request, template, context)
+        return redirect(dashboard(request, username))
 
 
 def signup(request):
@@ -63,12 +63,16 @@ def signup(request):
         return redirect(login)
 
 
-def dashboard(request):
-    template = "welcome/dashboard.html"
-    context = {
-        "title": "Dashboard",
-    }
-    return render(request, template, context)
+def dashboard(request, username):
+    if users.getSession(username) == False:
+        return redirect(login)
+    else:
+        template = "welcome/dashboard.html"
+        context = {
+            "title": "Dashboard",
+        }
+        return render(request, template, context)
+
 
 def accounts(request):
     template = "welcome/accounts.html"
@@ -77,14 +81,13 @@ def accounts(request):
     }
     return render(request, template, context)
 
+
 def sessions(request):
     template = "welcome/sessions.html"
     context = {
         "title": "sessions",
     }
     return render(request, template, context)
-
-    
 
 
 def hashinfo(*args):
