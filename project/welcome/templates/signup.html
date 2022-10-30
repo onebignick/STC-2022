@@ -117,8 +117,69 @@
   small{
       color: red;
   }
+
+  .spinny {
+    animation: spin 2s linear infinite;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .overlay {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-x: hidden;
+  }
+
+  .overlayContents {
+    /* centre the overlay contents */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: auto;
+    height: auto;
+    width: 150px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 30px;
+    padding: 50px;
+    text-align: center;
+  }
+
+  .overlayContents h3 {
+    margin: 0 0 30px;
+    padding: 0;
+    color: #fff;
+    text-align: center;
+  }
 </style>
+
+
 <body>
+  <div id="loadingOverlay" class="overlay">
+    <div class="overlayContents">
+      <div class="spinny"></div>
+      <h3>Logging In</h3>
+    </div>
+  </div>
   <div class="login-box">
     <h2>Create a User</h2>
     <form method="POST" action="">
@@ -143,7 +204,7 @@
           <small id="noPasswordMatch" class="'form-text text-muted">Passwords do not match</small>
           {% endif %}
       </div>
-      <button type="submit" class="btn btn-primary">Sign up</button>
+      <button type="submit" onclick="showOverlay()" class="btn btn-primary">Sign up</button>
   
       <p>Already have an account?</p>
       <a class="loginbtn" href="{% url 'login' %}" role="button">Log in</a>
@@ -151,3 +212,12 @@
   </div>
 </body>
 </html>
+
+
+<script>
+  function showOverlay() {
+    // when the user click the login button, show overlay
+    console.log("show overlay");
+    document.getElementById("loadingOverlay").style.width = "100%";
+  }
+</script>
