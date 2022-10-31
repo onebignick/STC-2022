@@ -92,8 +92,10 @@ def sessions(request):
     return render(request, template, context)
 
 
-def hashinfo(*args):
+def hashinfo(*args, **kwargs):
     hash = sha512()
     for arg in args:
         hash.update(arg.encode())
+    for key, value in kwargs.items():
+        hash.update(value.encode())
     return hash.hexdigest()
