@@ -22,13 +22,14 @@ def login(request):
         password = hashinfo(request.POST.get("exampleInputPassword1"), username)
 
         session_address = users.login(username, password)
+        print(session_address)
         # if username does not exist
         if session_address == "0x0000000000000000000000000000000000000000":
             print("Error! Username or password incorrect")
             context["incorrectDetails"] = True
             return render(request, template, context)
 
-        return redirect("dashboard", username=username)
+        return redirect("dashboard", username=username, session=session_address)
 
 
 def signup(request):
@@ -62,15 +63,16 @@ def signup(request):
         return redirect(login)
 
 
-def dashboard(request, username):
-    if users.getSession(username) == True:
-        template = "dashboard.html"
-        context = {
-            "title": "Dashboard",
-        }
-        return render(request, template, context)
+def dashboard(request, username, session):
+    if session == "0x0000000000000000000000000000000000000000":
+        return redirect(login)
 
-    return redirect(login)
+    template = "dashboard.html"
+    context = {
+        "title": "Dashboard",
+        "session": session,
+    }
+    return render(request, template, context)
 
 
 def accounts(request):
@@ -96,18 +98,3 @@ def hashinfo(*args, **kwargs):
     for key, value in kwargs.items():
         hash.update(value.encode())
     return hash.hexdigest()
-
-
-def cookie_session(request):
-    request.session.set_test_cookie()
-    response.set
-    return HttpResponse("<h1>dataflair</h1>")
-
-
-def cookie_delete(request):
-    if request.session.test_cookie_worked():
-        request.session.delete_test_cookie()
-        response = HttpResponse("dataflair<br> cookie created")
-    else:
-        response = HttpResponse("Dataflair <br> your browser does not accept cookies")
-    return response

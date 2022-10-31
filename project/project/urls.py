@@ -21,10 +21,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.login, name="login"),
     path("signup/", views.signup, name="signup"),
-    path("dashboard/<str:username>", views.dashboard, name="dashboard"),
+    path("dashboard/<str:username><str:session>", views.dashboard, name="dashboard"),
     path("accounts/", views.accounts, name="accounts"),
     path("sessions/", views.sessions, name="sessions"),
-    path("testcookie/", views.cookie_session, name="cookie_session"),
-    path("deletecookie/", views.cookie_delete, name="cookie_delete"),
     # path("", include("welcome.urls")),
 ]
