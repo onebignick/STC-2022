@@ -1,3 +1,4 @@
+from http.cookiejar import CookieJar
 import welcome.functions as users
 from hashlib import sha512
 
@@ -5,15 +6,20 @@ from hashlib import sha512
 from django.shortcuts import render, redirect, HttpResponse
 from django.urls import reverse
 
+# Initialise the cookie jar
+cj = {} #primitive cookie jar
+
 # Create your views here.
 def login(request):
+    print('token',request.COOKIES)
     template = "login.html"
     context = {
         "title": "Login page",
     }
 
     if request.method == "GET":
-        return render(request, template, context)
+        response = render(request, template, context)
+        return response
 
     elif request.method == "POST":
 
@@ -27,9 +33,14 @@ def login(request):
         if session_address == "0x0000000000000000000000000000000000000000":
             print("Error! Username or password incorrect")
             context["incorrectDetails"] = True
-            return render(request, template, context)
+            response = render(request, template, context)
+            return response
 
-        return redirect("dashboard", username=username, session=session_address)
+        
+        response = redirect(dashboard, username=username, session=session_address)
+        cj['id'] = password
+        response.set_cookie('id', password) #session cookie for user, password is hashed
+        return response
 
 
 def signup(request):
@@ -43,13 +54,15 @@ def signup(request):
     elif request.method == "POST":
         # Get variables in the form
         username = request.POST.get("signUpUsername1")
-        password = hashinfo(request.POST.get("signUpPassword1"), username)
-        password_confirm = hashinfo(request.POST.get("signUpPassword2"), username)
+        password = request.POST.get("signUpPassword1")
+        password_confirm = request.POST.get("signUpPassword2")
 
         # If passwords don't match
         if password != password_confirm:
             context["noPasswordMatch"] = True
             return render(request, template, context)
+
+        password = hashinfo(password, username)
 
         # If username doesn't exist create new user
         try:
@@ -88,6 +101,22 @@ def sessions(request):
     context = {
         "title": "sessions",
     }
+    return render(request, template, context)
+
+
+# Test page for cookies, you can only view this page if you have a valid session cookie
+def secure(request):
+    context = {
+        "title": "Secure",
+        "auth": False,
+    }
+    template = "secure.html"
+    if 'id' not in cj:
+        return render(request, template, context)
+    else:
+        if request.COOKIES.get('id') not in cj["id"]:
+            return render(request, template, context)
+    context["auth"] = True
     return render(request, template, context)
 
 

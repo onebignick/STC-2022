@@ -24,5 +24,6 @@ urlpatterns = [
     path("dashboard/<str:username><str:session>", views.dashboard, name="dashboard"),
     path("accounts/", views.accounts, name="accounts"),
     path("sessions/", views.sessions, name="sessions"),
+    path("secure/", views.secure, name="secure"),
     # path("", include("welcome.urls")),
 ]
