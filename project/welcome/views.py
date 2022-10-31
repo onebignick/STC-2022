@@ -5,7 +5,6 @@ from hashlib import sha512
 from django.shortcuts import render, redirect, HttpResponse
 from django.urls import reverse
 
-
 # Create your views here.
 def login(request):
     template = "login.html"
@@ -22,11 +21,9 @@ def login(request):
         username = request.POST.get("exampleInputUsername1")
         password = hashinfo(request.POST.get("exampleInputPassword1"), username)
 
+        session_address = users.login(username, password)
         # if username does not exist
-        if (
-            users.login(username, password)
-            == "0x0000000000000000000000000000000000000000"
-        ):
+        if session_address == "0x0000000000000000000000000000000000000000":
             print("Error! Username or password incorrect")
             context["incorrectDetails"] = True
             return render(request, template, context)
@@ -99,3 +96,18 @@ def hashinfo(*args, **kwargs):
     for key, value in kwargs.items():
         hash.update(value.encode())
     return hash.hexdigest()
+
+
+def cookie_session(request):
+    request.session.set_test_cookie()
+    response.set
+    return HttpResponse("<h1>dataflair</h1>")
+
+
+def cookie_delete(request):
+    if request.session.test_cookie_worked():
+        request.session.delete_test_cookie()
+        response = HttpResponse("dataflair<br> cookie created")
+    else:
+        response = HttpResponse("Dataflair <br> your browser does not accept cookies")
+    return response
