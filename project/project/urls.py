@@ -21,5 +21,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.login, name="login"),
     path("signup/", views.signup, name="signup"),
-    path("", include("welcome.urls")),
+    path("dashboard/<str:username>", views.dashboard, name="dashboard"),
+    path("accounts/", views.accounts, name="accounts"),
+    path("sessions/", views.sessions, name="sessions"),
+    # path("", include("welcome.urls")),
 ]

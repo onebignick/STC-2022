@@ -3,6 +3,8 @@ from hashlib import sha512
 
 # Django imports here
 from django.shortcuts import render, redirect, HttpResponse
+from django.urls import reverse
+
 
 # Create your views here.
 def login(request):
@@ -29,7 +31,7 @@ def login(request):
             context["incorrectDetails"] = True
             return render(request, template, context)
 
-        return redirect(dashboard(request, username))
+        return redirect("dashboard", username=username)
 
 
 def signup(request):
@@ -64,18 +66,18 @@ def signup(request):
 
 
 def dashboard(request, username):
-    if users.getSession(username) == False:
-        return redirect(login)
-    else:
-        template = "welcome/dashboard.html"
+    if users.getSession(username) == True:
+        template = "dashboard.html"
         context = {
             "title": "Dashboard",
         }
         return render(request, template, context)
 
+    return redirect(login)
+
 
 def accounts(request):
-    template = "welcome/accounts.html"
+    template = "accounts.html"
     context = {
         "title": "Accounts",
     }
@@ -83,7 +85,7 @@ def accounts(request):
 
 
 def sessions(request):
-    template = "welcome/sessions.html"
+    template = "sessions.html"
     context = {
         "title": "sessions",
     }

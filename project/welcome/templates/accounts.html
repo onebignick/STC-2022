@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<style>
+  html {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: linear-gradient(#141e30, #243b55);
+  }
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: black;
+  }
+
+  li {
+    float: left;
+  }
+
+  li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+
+  .current {
+    background: #141e30;
+  }
+
+  li a:hover:not(.active) {
+    background-color: #111;
+  }
+
+  .active {
+    background-color: #00a1a9;
+  }
+
+  .active:hover {
+    background-color: #03e9f4;
+  }
+</style>
+
+<body>
+  <ul>
+    <li><a href="{% url 'dashboard' %}">BIG</a></li>
+    <li><a class="current" href="#">Accounts</a></li>
+    <li><a href="{% url 'sessions' %}">Sessions</a></li>
+    <li style="float:right"><a class="active" href="#">Sign Out</a></li>
+  </ul>
+</body>
+
+</html>
