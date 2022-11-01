@@ -11,7 +11,6 @@ cj = {}  # primitive cookie jar
 
 # Create your views here.
 def login(request):
-    print("token", request.COOKIES)
     template = "login.html"
     context = {
         "title": "Login page",
@@ -39,9 +38,8 @@ def login(request):
         response = redirect(dashboard, username=username, session=session_address)
         cj["session"] = session_address
 
-        response.set_cookie(
-            "session", session_address
-        )  # session cookie for user, password is hashed
+        # session cookie for user, password is hashed
+        response.set_cookie("session", session_address)
         print(cj)
         return response
 
@@ -79,14 +77,13 @@ def signup(request):
         return redirect(login)
 
 
-def dashboard(request, username, session):
-    if session == "0x0000000000000000000000000000000000000000":
+def dashboard(request):
+    if cj["session"] == "0x0000000000000000000000000000000000000000":
         return redirect(login)
 
     template = "dashboard.html"
     context = {
         "title": "Dashboard",
-        "session": session,
     }
     return render(request, template, context)
 
@@ -105,6 +102,12 @@ def sessions(request):
         "title": "sessions",
     }
     return render(request, template, context)
+
+
+def logout(request):
+    session = cj["session"]
+    print(users.logout(users.getUsername(session), session))
+    return redirect(login)
 
 
 # Test page for cookies, you can only view this page if you have a valid session cookie

@@ -22,6 +22,10 @@ contract Session {
     function getLogoutDatetime() public view returns (uint256) {
         return logout_datetime;
     }
+
+    function getUser() public view returns (string memory) {
+        return user;
+    }
 }
 
 contract Users {
