@@ -31,7 +31,7 @@ contract Users {
     struct UserData {
         string user;
         string password;
-        bool in_session;
+        string role;
     }
 
     mapping(string => UserData) private users;
@@ -48,17 +48,12 @@ contract Users {
         return (users[key].user, users[key].password);
     }
 
-    function getSession(string memory user) public view returns (bool) {
-        return users[user].in_session;
-    }
-
     function login(string memory user, string memory password) public {
         bool result = compareStrings(users[user].password, password);
 
         if (result) {
             Session session = new Session(user, block.timestamp);
             sessions[user].push(address(session));
-            users[user].in_session = true;
             emit LoginEvent(address(session));
         } else {
             emit LoginEvent(address(0));
@@ -72,7 +67,6 @@ contract Users {
                 Session(sessionList[i]).logoutSession(block.timestamp);
                 sessionList[i] = sessionList[sessionList.length - 1];
                 sessionList.pop();
-                users[user].in_session = false;
                 emit LogoutEvent("logout successful");
                 return true;
             }
@@ -92,17 +86,17 @@ contract Users {
 
     function addUser(string memory user, string memory password) public {
         require(compareStrings(users[user].user, ""), "User already exists.");
-        bool session = false;
-        UserData memory newUser = UserData(user, password, session);
+        string memory role = "user";
+        UserData memory newUser = UserData(user, password, role);
         users[user] = newUser;
         lookup.push(user);
     }
 
-    // function updateUser(string memory user, string memory role) public {
-    //     UserData storage updated = users[user];
-    //     users[user].role = role;
-    //     users[user] = updated;
-    // }
+    function updateUser(string memory user, string memory role) public {
+        UserData storage updated = users[user];
+        users[user].role = role;
+        users[user] = updated;
+    }
 
     function updatePassword(
         string memory user,

@@ -7,11 +7,11 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.urls import reverse
 
 # Initialise the cookie jar
-cj = {} #primitive cookie jar
+cj = {}  # primitive cookie jar
 
 # Create your views here.
 def login(request):
-    print('token',request.COOKIES)
+    print("token", request.COOKIES)
     template = "login.html"
     context = {
         "title": "Login page",
@@ -36,11 +36,13 @@ def login(request):
             response = render(request, template, context)
             return response
 
-        
         response = redirect(dashboard, username=username, session=session_address)
-        cj['session'] = session_address
+        cj["session"] = session_address
 
-        response.set_cookie('session', session_address) #session cookie for user, password is hashed
+        response.set_cookie(
+            "session", session_address
+        )  # session cookie for user, password is hashed
+        print(cj)
         return response
 
 
@@ -112,10 +114,10 @@ def secure(request):
         "auth": False,
     }
     template = "secure.html"
-    if 'session' not in cj:
+    if "session" not in cj:
         return render(request, template, context)
     else:
-        if request.COOKIES.get('session') not in cj["session"]:
+        if request.COOKIES.get("session") not in cj["session"]:
             return render(request, template, context)
     context["auth"] = True
     return render(request, template, context)
