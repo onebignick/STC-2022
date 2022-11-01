@@ -38,8 +38,9 @@ def login(request):
 
         
         response = redirect(dashboard, username=username, session=session_address)
-        cj['id'] = password
-        response.set_cookie('id', password) #session cookie for user, password is hashed
+        cj['session'] = session_address
+
+        response.set_cookie('session', session_address) #session cookie for user, password is hashed
         return response
 
 
@@ -111,10 +112,10 @@ def secure(request):
         "auth": False,
     }
     template = "secure.html"
-    if 'id' not in cj:
+    if 'session' not in cj:
         return render(request, template, context)
     else:
-        if request.COOKIES.get('id') not in cj["id"]:
+        if request.COOKIES.get('session') not in cj["session"]:
             return render(request, template, context)
     context["auth"] = True
     return render(request, template, context)
