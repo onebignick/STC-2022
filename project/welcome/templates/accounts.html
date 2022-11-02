@@ -68,9 +68,10 @@
       <th>Username</th>
       <th>Role</th>
     </tr>
-    {% for user, password, role in all_accounts %}
+    {% for user, password ,role, click in all_accounts %}
     <tr>
       <th>{{ user }}</th>
+      <th>{{ click }}</th>
       <th>{{ role }}</th>
     </tr>
     {% endfor %}

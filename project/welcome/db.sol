@@ -92,7 +92,7 @@ contract Users {
     function addUser(string memory user, string memory password) public {
         require(compareStrings(users[user].user, ""), "User already exists.");
         string memory role = "user";
-        uint256 click = 0
+        uint256 click = 0;
         UserData memory newUser = UserData(user, password, role, click);
         users[user] = newUser;
         lookup.push(user);
