@@ -100,6 +100,12 @@
   .active:hover {
     background-color: #03e9f4;
   }
+  #counter{
+      font-size: 80px;
+      color:#0084FF;
+      text-align: center;
+      margin-top: 15%;
+  }
 </style>
 
 <body>
@@ -110,7 +116,8 @@
     <li><a>Current Session: {{ session }}</a></li>
     <li style="float:right"><a class="active" href="{% url 'logout' %}">Sign Out</a></li>
   </ul>
-
+  <!-- counter -->
+  <div id="counter">0</div>
   <!-- clicker -->
   <div id="clicker">&#128051;</div>
 
@@ -135,13 +142,19 @@
 
     var timeout, clicker = $('#clicker');
     var count = 25;
-
+    var counter = 0;
     clicker.mousedown(function () {
       timeout = setInterval(function () {
         if (count >= 300) {
           count = 50;
           clicker.removeClass('wiggle');
+          var button = document.getElementById("counter");
+  
+
+          counter += 1;
+          button.innerHTML = counter;
         }
+        
 
         else {
           clicker.addClass('wiggle');
