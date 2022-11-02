@@ -1,4 +1,3 @@
-from http.cookiejar import CookieJar
 import welcome.functions as users
 from hashlib import sha512
 
@@ -40,6 +39,8 @@ def login(request):
 
         # session cookie for user, password is hashed
         response.set_cookie("session", session_address)
+        # add logic to change auth level, 1 = normal user, 2 = admin
+        response.set_cookie('authlevel', '1')
         print(cj)
         return response
 
@@ -114,7 +115,7 @@ def logout(request):
 def secure(request):
     context = {
         "title": "Secure",
-        "auth": False,
+        "auth": 0,
     }
     template = "secure.html"
     if "session" not in cj:
@@ -122,7 +123,11 @@ def secure(request):
     else:
         if request.COOKIES.get("session") not in cj["session"]:
             return render(request, template, context)
-    context["auth"] = True
+    #testing admin cookie
+    if request.COOKIES.get("authlevel") == '2':
+        context["auth"] = 2
+    else:
+        context["auth"] = 1
     return render(request, template, context)
 
 

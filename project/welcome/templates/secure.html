@@ -69,8 +69,10 @@
     <li><a class="current" href="#">Secure Webpage</a></li>
     <li style="float:right"><a class="active" href="#">Sign Out</a></li>
   </ul>
-  {% if auth %}
-  <h1>This webpage is secured with cookies</h1>
+  {% if auth == 2 %}
+  <h1>You are an administrator</h1>
+  {% elif auth == 1 %}
+  <h1>You are a normal user</h1>
   {% else %}
   <h1>You cannot view this webpage</h1>
   {% endif %}
