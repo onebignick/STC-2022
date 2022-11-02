@@ -93,6 +93,7 @@ def dashboard(request):
 def accounts(request):
     template = "accounts.html"
     all_accounts = users.getAllUsers()
+    print(all_accounts)
     context = {
         "title": "Accounts",
         "all_accounts": all_accounts,
