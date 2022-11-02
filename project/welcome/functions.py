@@ -3,6 +3,7 @@ import json
 from requests import delete
 from web3 import Web3
 from pathlib import Path
+from hashlib import sha512
 from solcx import compile_standard, install_solc
 from web3.middleware import geth_poa_middleware
 
@@ -63,15 +64,15 @@ if chain_id == 11155111:  # Sepolia chain ID is 11155111
     w3.middleware_onion.inject(geth_poa_middleware, layer=0)
     print(w3.clientVersion)
 
-my_address = "0x1667a684E0bD33EdeCf74EE86B52835312bd7eEA"
-private_key = "c9544cafe50f0cebcb512535e6a902fcae5ecddf7c5fd832d39ef2e645a6be56"
+# my_address = "0x1667a684E0bD33EdeCf74EE86B52835312bd7eEA"
+# private_key = "c9544cafe50f0cebcb512535e6a902fcae5ecddf7c5fd832d39ef2e645a6be56"
 
 # my_address = "0x545AFcA9a28c42e08D670fe72B69376213fbEDa3"
 # private_key = "8ce2763ff0b066ca62ee7e35f6c1e6db977954f1cdaecacf902dc9c3744bd942"
 
 # jons add and key
-# my_address = "0xE5ce067301e150F27F50Eb58ae078A80ab987183"
-# private_key = "36230e823372730c5225d10470fef124aaa6a1a2f4286f78b5eba097c8af0653"
+my_address = "0xE5ce067301e150F27F50Eb58ae078A80ab987183"
+private_key = "36230e823372730c5225d10470fef124aaa6a1a2f4286f78b5eba097c8af0653"
 
 # Get contract address of deployed contract
 p = Path(__file__).with_name("contractaddress.txt")
@@ -265,10 +266,16 @@ def getLogoutDatetime(session):
     session_contract = w3.eth.contract(address=session, abi=session_abi)
     return session_contract.functions.getLogoutDatetime().call()
 
-
+def hashinfo(*args, **kwargs):
+    hash = sha512()
+    for arg in args:
+        hash.update(arg.encode())
+    for key, value in kwargs.items():
+        hash.update(value.encode())
+    return hash.hexdigest()
 # Create admin account
 try:
-    createNewUser("admin", "root")
+    createNewUser("admin", hashinfo("root", "admin"))
     giveRole("admin", "admin")
 except:
     pass
