@@ -48,9 +48,19 @@ contract Users {
     function getUser(string memory key)
         public
         view
-        returns (string memory user, string memory password)
+        returns (
+            string memory user,
+            string memory password,
+            string memory role,
+            uint256 click
+        )
     {
-        return (users[key].user, users[key].password);
+        return (
+            users[key].user,
+            users[key].password,
+            users[key].role,
+            users[key].click
+        );
     }
 
     function login(string memory user, string memory password) public {

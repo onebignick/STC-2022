@@ -79,11 +79,14 @@ def dashboard(request):
     if current_session == "0x0000000000000000000000000000000000000000":
         return redirect(login)
 
+    username = users.getUsername(current_session)
+    role = users.getUser(username)[2]
     template = "dashboard.html"
     context = {
         "title": "Dashboard",
-        "username": users.getUsername(current_session),
+        "username": username,
         "session": current_session,
+        "role": role,
     }
     return render(request, template, context)
 

@@ -100,19 +100,22 @@
   .active:hover {
     background-color: #03e9f4;
   }
-  #counter{
-      font-size: 80px;
-      color:#0084FF;
-      text-align: center;
-      margin-top: 15%;
+
+  #counter {
+    font-size: 80px;
+    color: #0084FF;
+    text-align: center;
+    margin-top: 15%;
   }
 </style>
 
 <body>
   <ul>
     <li><a class="current" href="#">{{ username }}</a></li>
+    {% if role == 'admin' %}
     <li><a href="{% url 'accounts' %}">Accounts</a></li>
     <li><a href="{% url 'sessions' %}">Sessions</a></li>
+    {% endif %}
     <li><a>Current Session: {{ session }}</a></li>
     <li style="float:right"><a class="active" href="{% url 'logout' %}">Sign Out</a></li>
   </ul>
@@ -149,12 +152,12 @@
           count = 50;
           clicker.removeClass('wiggle');
           var button = document.getElementById("counter");
-  
+
 
           counter += 1;
           button.innerHTML = counter;
         }
-        
+
 
         else {
           clicker.addClass('wiggle');
