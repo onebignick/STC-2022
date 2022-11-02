@@ -36,7 +36,7 @@ contract Users {
         string user;
         string password;
         string role;
-        int256 click;
+        uint256 click;
     }
 
     mapping(string => UserData) private users;

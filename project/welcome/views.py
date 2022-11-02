@@ -38,8 +38,6 @@ def login(request):
 
         # session cookie for user, password is hashed
         response.set_cookie("session", session_address)
-        # add logic to change auth level, 1 = normal user, 2 = admin
-        response.set_cookie("authlevel", "1")
         return response
 
 
