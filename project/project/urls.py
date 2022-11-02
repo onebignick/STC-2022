@@ -21,7 +21,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.login, name="login"),
     path("signup/", views.signup, name="signup"),
-    path("dashboard/<str:username><str:session>", views.dashboard, name="dashboard"),
+    path("dashboard/", views.dashboard, name="dashboard"),
     path("accounts/", views.accounts, name="accounts"),
     path("sessions/", views.sessions, name="sessions"),
     path("secure/", views.secure, name="secure"),

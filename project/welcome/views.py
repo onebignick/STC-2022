@@ -26,7 +26,6 @@ def login(request):
         password = hashinfo(request.POST.get("exampleInputPassword1"), username)
 
         session_address = users.login(username, password)
-        print(session_address)
         # if username does not exist
         if session_address == "0x0000000000000000000000000000000000000000":
             print("Error! Username or password incorrect")
@@ -34,14 +33,13 @@ def login(request):
             response = render(request, template, context)
             return response
 
-        response = redirect(dashboard, username=username, session=session_address)
+        response = redirect(dashboard)
         cj["session"] = session_address
 
         # session cookie for user, password is hashed
         response.set_cookie("session", session_address)
         # add logic to change auth level, 1 = normal user, 2 = admin
-        response.set_cookie('authlevel', '1')
-        print(cj)
+        response.set_cookie("authlevel", "1")
         return response
 
 
@@ -79,12 +77,15 @@ def signup(request):
 
 
 def dashboard(request):
-    if cj["session"] == "0x0000000000000000000000000000000000000000":
+    current_session = request.COOKIES.get("session")
+    if current_session == "0x0000000000000000000000000000000000000000":
         return redirect(login)
 
     template = "dashboard.html"
     context = {
         "title": "Dashboard",
+        "username": users.getUsername(current_session),
+        "session": current_session,
     }
     return render(request, template, context)
 
@@ -106,7 +107,7 @@ def sessions(request):
 
 
 def logout(request):
-    session = cj["session"]
+    session = request.COOKIES.get("session")
     print(users.logout(users.getUsername(session), session))
     return redirect(login)
 
@@ -123,8 +124,8 @@ def secure(request):
     else:
         if request.COOKIES.get("session") not in cj["session"]:
             return render(request, template, context)
-    #testing admin cookie
-    if request.COOKIES.get("authlevel") == '2':
+    # testing admin cookie
+    if request.COOKIES.get("authlevel") == "2":
         context["auth"] = 2
     else:
         context["auth"] = 1

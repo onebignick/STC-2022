@@ -104,9 +104,10 @@
 
 <body>
   <ul>
-    <li><a class="current" href="#">BIG</a></li>
+    <li><a class="current" href="#">{{ username }}</a></li>
     <li><a href="{% url 'accounts' %}">Accounts</a></li>
     <li><a href="{% url 'sessions' %}">Sessions</a></li>
+    <li><a>Current Session: {{ session }}</a></li>
     <li style="float:right"><a class="active" href="{% url 'logout' %}">Sign Out</a></li>
   </ul>
 
