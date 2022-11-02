@@ -97,7 +97,3 @@ f.close()
 # write Users contract address
 f = open("./project/welcome/contractaddress.txt", "w")
 f.write(tx_receipt.contractAddress)
-
-# users.createNewUser("admin", "root")
-# users.giveRole("admin", "admin")
-# users.getAllUsers()
