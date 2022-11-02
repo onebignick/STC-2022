@@ -36,6 +36,7 @@ contract Users {
         string user;
         string password;
         string role;
+        int256 click;
     }
 
     mapping(string => UserData) private users;
@@ -91,7 +92,8 @@ contract Users {
     function addUser(string memory user, string memory password) public {
         require(compareStrings(users[user].user, ""), "User already exists.");
         string memory role = "user";
-        UserData memory newUser = UserData(user, password, role);
+        uint256 click = 0
+        UserData memory newUser = UserData(user, password, role, click);
         users[user] = newUser;
         lookup.push(user);
     }
