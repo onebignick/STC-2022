@@ -1,5 +1,6 @@
 # file to deploy db.sol to the blockchain
 import json
+from msilib.schema import AdminExecuteSequence
 from web3 import Web3
 from pathlib import Path
 from solcx import compile_standard, install_solc
@@ -95,3 +96,47 @@ f.close()
 # write Users contract address
 f = open("./project/welcome/contractaddress.txt", "w")
 f.write(tx_receipt.contractAddress)
+
+# Creation of admin user
+username = "admin"
+password = "root"
+
+print(f"Attempting to create user: {username} with password: {password}")
+nonce = w3.eth.getTransactionCount(my_address)
+transaction = db.functions.addUser(username, password).buildTransaction(
+    {
+        "chainId": chain_id,
+        "gasPrice": w3.eth.gas_price,
+        "from": my_address,
+        "nonce": nonce,
+    }
+)
+# Signing the transaction
+signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)
+print("Sending Transaction!")
+# Sending txn
+tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+# Wait for the transaction to be mined, and get the transaction receipt
+print("Waiting for transaction to finish...")
+tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+print(f"Done! User: {username} created with password: {password}")
+
+# Give admin user admin role
+role = "admin"
+nonce = w3.eth.getTransactionCount(my_address)
+transaction = db.functions.updateUser(username, role).buildTransaction(
+    {
+        "chainId": chain_id,
+        "gasPrice": w3.eth.gas_price,
+        "from": my_address,
+        "nonce": nonce,
+    }
+)
+signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)
+print("Sending Transaction!")
+# Sending txn
+tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+# Wait for the transaction to be mined, and get the transaction receipt
+print("Waiting for transaction to finish...")
+tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+print(f"{username} was given {role}")

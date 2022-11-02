@@ -92,8 +92,10 @@ def dashboard(request):
 
 def accounts(request):
     template = "accounts.html"
+    all_accounts = users.getAllUsers()
     context = {
         "title": "Accounts",
+        "all_accounts": all_accounts,
     }
     return render(request, template, context)
 
