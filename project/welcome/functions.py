@@ -11,7 +11,7 @@ p = Path(__file__).with_name("db.sol")
 with p.open("r") as file:
     db_file = file.read()
 
-print("Installing... test")
+print("Installing...")
 install_solc("0.8.7")
 print("py-solcx installed!")
 
@@ -63,15 +63,15 @@ if chain_id == 11155111:  # Sepolia chain ID is 11155111
     w3.middleware_onion.inject(geth_poa_middleware, layer=0)
     print(w3.clientVersion)
 
-#my_address = "0x1667a684E0bD33EdeCf74EE86B52835312bd7eEA"
-#private_key = "c9544cafe50f0cebcb512535e6a902fcae5ecddf7c5fd832d39ef2e645a6be56"
+my_address = "0x1667a684E0bD33EdeCf74EE86B52835312bd7eEA"
+private_key = "c9544cafe50f0cebcb512535e6a902fcae5ecddf7c5fd832d39ef2e645a6be56"
 
 # my_address = "0x545AFcA9a28c42e08D670fe72B69376213fbEDa3"
 # private_key = "8ce2763ff0b066ca62ee7e35f6c1e6db977954f1cdaecacf902dc9c3744bd942"
 
 # jons add and key
-my_address = "0xE5ce067301e150F27F50Eb58ae078A80ab987183"
-private_key = "36230e823372730c5225d10470fef124aaa6a1a2f4286f78b5eba097c8af0653"
+# my_address = "0xE5ce067301e150F27F50Eb58ae078A80ab987183"
+# rivate_key = "36230e823372730c5225d10470fef124aaa6a1a2f4286f78b5eba097c8af0653"
 
 # Get contract address of deployed contract
 p = Path(__file__).with_name("contractaddress.txt")
@@ -248,7 +248,6 @@ def getSession(username):
 
 
 def getAllUsers():
-    print(db.functions.getAllUsers().call())
     return db.functions.getAllUsers().call()
 
 
@@ -267,3 +266,9 @@ def getLogoutDatetime(session):
     return session_contract.functions.getLogoutDatetime().call()
 
 
+# Create admin account
+try:
+    db.functions.getUser("admin")
+except:
+    createNewUser("admin", "root")
+    giveRole("admin", "admin")
