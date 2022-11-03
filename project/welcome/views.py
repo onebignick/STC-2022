@@ -10,6 +10,7 @@ cj = {}  # primitive cookie jar
 
 # Create your views here.
 def login(request):
+    print(request.COOKIES)
     template = "login.html"
     context = {
         "title": "Login page",
@@ -37,7 +38,7 @@ def login(request):
         cj["session"] = session_address
 
         # session cookie for user, password is hashed
-        response.set_cookie("session", session_address)
+        response.set_cookie("session", session_address, max_age=30*60)
         return response
 
 
@@ -171,7 +172,9 @@ def sessions(request):
 def logout(request):
     session = request.COOKIES.get("session")
     print(users.logout(users.getUsername(session), session))
-    return redirect(login)
+    response = redirect(login)
+    response.delete_cookie("session") # delete cookie on session exit 
+    return response
 
 
 # Test page for cookies, you can only view this page if you have a valid session cookie
@@ -184,7 +187,7 @@ def secure(request):
     if "session" not in cj:
         return render(request, template, context)
     else:
-        if request.COOKIES.get("session") not in cj["session"]:
+        if request.COOKIES.get("session") not in cj.values():
             return render(request, template, context)
     # testing admin cookie
     if request.COOKIES.get("authlevel") == "2":
