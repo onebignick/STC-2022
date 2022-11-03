@@ -64,15 +64,15 @@ if chain_id == 11155111:  # Sepolia chain ID is 11155111
     w3.middleware_onion.inject(geth_poa_middleware, layer=0)
     print(w3.clientVersion)
 
-my_address = "0x1667a684E0bD33EdeCf74EE86B52835312bd7eEA"
-private_key = "c9544cafe50f0cebcb512535e6a902fcae5ecddf7c5fd832d39ef2e645a6be56"
+# my_address = "0x1667a684E0bD33EdeCf74EE86B52835312bd7eEA"
+# private_key = "c9544cafe50f0cebcb512535e6a902fcae5ecddf7c5fd832d39ef2e645a6be56"
 
 # my_address = "0x545AFcA9a28c42e08D670fe72B69376213fbEDa3"
 # private_key = "8ce2763ff0b066ca62ee7e35f6c1e6db977954f1cdaecacf902dc9c3744bd942"
 
 # jons add and key
-# my_address = "0xE5ce067301e150F27F50Eb58ae078A80ab987183"
-# private_key = "36230e823372730c5225d10470fef124aaa6a1a2f4286f78b5eba097c8af0653"
+my_address = "0xE5ce067301e150F27F50Eb58ae078A80ab987183"
+private_key = "36230e823372730c5225d10470fef124aaa6a1a2f4286f78b5eba097c8af0653"
 
 # Get contract address of deployed contract
 p = Path(__file__).with_name("contractaddress.txt")
@@ -247,6 +247,27 @@ def giveRole(username, role):
     tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
     print(f"user: {username} given role: {role}")
 
+
+def updateClick(username, click):
+    print(f"Attempting to give user: {username} click: {click}")
+    
+    nonce = w3.eth.getTransactionCount(my_address)
+    transaction = db.functions.updateUserClicks(username, int(click)).buildTransaction(
+        {
+            "chainId": chain_id,
+            "gasPrice": w3.eth.gas_price,
+            "from": my_address,
+            "nonce": nonce,
+        }
+    )
+    # Signing the transaction
+    signed_txn = w3.eth.account.sign_transaction(transaction, private_key=private_key)
+    print("Sending Transaction!")
+    # Sending txn
+    tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+    # Wait for the transaction to be mined, and get the transaction receipt
+    print("Waiting for transaction to finish...")
+    tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
 def getSession(username):
     return db.functions.getSession(username).call()

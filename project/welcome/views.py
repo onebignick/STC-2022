@@ -81,14 +81,22 @@ def dashboard(request):
 
     username = users.getUsername(current_session)
     role = users.getUser(username)[2]
+    var_clicks = users.getUser(username)[3]
     template = "dashboard.html"
     context = {
         "title": "Dashboard",
         "username": username,
         "session": current_session,
         "role": role,
+        "var_clicks": var_clicks,
     }
+    if request.method == 'POST':
+        var_clicks = request.POST["var_clicks"]
+        users.updateClick(username, int(var_clicks))
+        print(var_clicks)
+
     return render(request, template, context)
+
 
 
 def accounts(request):
@@ -97,6 +105,7 @@ def accounts(request):
     context = {
         "title": "Accounts",
         "all_accounts": all_accounts,
+        
     }
     return render(request, template, context)
 

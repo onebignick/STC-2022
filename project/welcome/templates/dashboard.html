@@ -143,9 +143,23 @@
       console.log('jquery added :)');
     }
 
+    var token = "{{csrf_token}}";
     var timeout, clicker = $('#clicker');
     var count = 25;
-    var counter = 0;
+    var counter = parseInt("{{ var_clicks }}");
+    
+    function save_counter(){
+      var_clicks = (counter).toString();
+      console.log(counter);
+      $.ajax({
+        headers: { "X-CSRFToken": token },
+        url:"/dashboard/",
+        data: {"var_clicks": counter},
+        type: "POST"
+      }).done(function(response){
+        console.log(response)
+      });
+    }
     clicker.mousedown(function () {
       timeout = setInterval(function () {
         if (count >= 300) {
@@ -155,6 +169,8 @@
 
 
           counter += 1;
+          
+          save_counter();
           button.innerHTML = counter;
         }
 

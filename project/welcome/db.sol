@@ -113,7 +113,11 @@ contract Users {
         users[user].role = role;
         users[user] = updated;
     }
-
+    function updateUserClicks(string memory user, uint256 click) public {
+        UserData storage updated = users[user];
+        users[user].click = click;
+        users[user] = updated;
+    }
     function updatePassword(
         string memory user,
         string memory old_password,
