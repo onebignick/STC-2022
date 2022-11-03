@@ -76,7 +76,11 @@ def signup(request):
 
 def dashboard(request):
     current_session = request.COOKIES.get("session")
-    if current_session == "0x0000000000000000000000000000000000000000":
+    if (
+        current_session == "0x0000000000000000000000000000000000000000"
+        and users.getLoginDatetime(current_session) != 0
+        and users.getLogoutDatetime(current_session) == 0
+    ):
         return redirect(login)
 
     username = users.getUsername(current_session)
@@ -90,7 +94,7 @@ def dashboard(request):
         "role": role,
         "var_clicks": var_clicks,
     }
-    if request.method == 'POST':
+    if request.method == "POST":
         var_clicks = request.POST["var_clicks"]
         users.updateClick(username, int(var_clicks))
         print(var_clicks)
@@ -98,22 +102,68 @@ def dashboard(request):
     return render(request, template, context)
 
 
-
 def accounts(request):
-    template = "accounts.html"
-    all_accounts = users.getAllUsers()
-    context = {
-        "title": "Accounts",
-        "all_accounts": all_accounts,
-        
-    }
-    return render(request, template, context)
+    current_session = request.COOKIES.get("session")
+    if (
+        current_session == "0x0000000000000000000000000000000000000000"
+        and users.getLoginDatetime(current_session) != 0
+        and users.getLogoutDatetime(current_session) == 0
+    ):
+        return redirect(login)
+
+    username = users.getUsername(current_session)
+    if users.getUser(username)[2] != "admin":
+        return redirect(login)
+
+    if request.method == "GET":
+        template = "accounts.html"
+        all_accounts = users.getAllUsers()
+        context = {
+            "title": "Accounts",
+            "username": username,
+            "all_accounts": all_accounts,
+        }
+        return render(request, template, context)
+    elif request.method == "POST":
+        username = request.POST.get("userToDelete")
+        try:
+            users.getUser(username)
+            users.deleteUser(username)
+        except:
+            print("error")
+
+        return redirect(accounts)
 
 
 def sessions(request):
+    current_session = request.COOKIES.get("session")
+    if (
+        current_session == "0x0000000000000000000000000000000000000000"
+        and users.getLoginDatetime(current_session) != 0
+        and users.getLogoutDatetime(current_session) == 0
+    ):
+        return redirect(login)
+
+    username = users.getUsername(current_session)
+    if users.getUser(username)[2] != "admin":
+        return redirect(login)
+
+    all_sessions = users.getAllSessions()
+    all_sessions_info = []
+    for i in range(len(all_sessions)):
+        all_sessions_info.append(
+            (
+                all_sessions[i],
+                users.getUsername(all_sessions[i]),
+                users.getLoginDatetime(all_sessions[i]),
+                users.getLogoutDatetime(all_sessions[i]),
+            )
+        )
+
     template = "sessions.html"
     context = {
         "title": "sessions",
+        "sessions": all_sessions_info,
     }
     return render(request, template, context)
 

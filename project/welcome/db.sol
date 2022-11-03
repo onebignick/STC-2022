@@ -41,6 +41,7 @@ contract Users {
 
     mapping(string => UserData) private users;
     mapping(string => address[]) private sessions;
+    address[] session_lookup;
     string[] lookup;
 
     constructor() {}
@@ -69,6 +70,7 @@ contract Users {
         if (result) {
             Session session = new Session(user, block.timestamp);
             sessions[user].push(address(session));
+            session_lookup.push(address(session));
             emit LoginEvent(address(session));
         } else {
             emit LoginEvent(address(0));
@@ -99,6 +101,14 @@ contract Users {
         return allUsers;
     }
 
+    function getAllSessions() public view returns (address[] memory) {
+        address[] memory allSessions = new address[](session_lookup.length);
+        for (uint256 i = 0; i < session_lookup.length; i++) {
+            allSessions[i] = session_lookup[i];
+        }
+        return allSessions;
+    }
+
     function addUser(string memory user, string memory password) public {
         require(compareStrings(users[user].user, ""), "User already exists.");
         string memory role = "user";
@@ -113,11 +123,13 @@ contract Users {
         users[user].role = role;
         users[user] = updated;
     }
+
     function updateUserClicks(string memory user, uint256 click) public {
         UserData storage updated = users[user];
         users[user].click = click;
         users[user] = updated;
     }
+
     function updatePassword(
         string memory user,
         string memory old_password,
