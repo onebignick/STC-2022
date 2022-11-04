@@ -121,7 +121,7 @@ def changePassword(username, old_password, new_password):
         f"Attempting to update user: {username} from password: {old_password} to {new_password}"
     )
     nonce = w3.eth.getTransactionCount(my_address)
-    transaction = db.functions.updateUser(
+    transaction = db.functions.updatePassword(
         username, old_password, new_password
     ).buildTransaction(
         {

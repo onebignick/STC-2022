@@ -156,14 +156,16 @@
 
 <body>
   <ul>
-    <li><a href="{% url 'dashboard' %}">Logged in as: {{ username }}</a></li>
+    <li><a href="{% url 'dashboard' %}">Logged in as: {{ user }}</a></li>
     <li><a href="{% url 'accounts' %}">Accounts</a></li>
     <li><a class="current" href="#">Sessions</a></li>
+    <li><a href="{% url 'profile' %}">Profile</a></li>
+    <li><a>Current Session: {{ session }}</a></li>
     <li style="float:right"><a class="active" href="{% url 'logout' %}">Sign Out</a></li>
   </ul>
   <br>
   <br>
-
+  <br>
   <table>
     <tr>
       <th class="text-left">Session Contract</th>

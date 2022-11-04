@@ -111,26 +111,27 @@ def profile(request):
     ):
         username = users.getUsername(current_session)
         role = users.getUser(username)[2]
-        clicks = users.getUser(username)[3]
 
         template = "profile.html"
         context = {
             "title": "Profile",
+            "session": current_session,
             "username": username,
             "role": role,
-            "clicks": clicks,
         }
         if request.method == "POST":
             oldPassword = request.POST.get("oldPassword")
             newPassword = request.POST.get("newPassword")
             newPasswordConfirm = request.POST.get("newPasswordConfirm")
+
             if newPassword != newPasswordConfirm:
                 context["Error"] = True
                 return render(request, template, context)
-            elif users.findPassword() != hashinfo(oldPassword):
+
+            elif users.findPassword(username) != hashinfo(oldPassword, username):
                 context["PasswordError"] = True
                 return render(request, template, context)
-            users.changePassword(username, oldPassword, newPassword)
+            users.changePassword(username, hashinfo(oldPassword, username), hashinfo(newPassword, username))
             context["PasswordChanged"] = True
             return render(request, template, context)
         return render(request, template, context)
@@ -155,18 +156,39 @@ def accounts(request):
             context = {
                 "title": "Accounts",
                 "username": username,
+                "session": current_session,
                 "all_accounts": all_accounts,
             }
             return render(request, template, context)
-        elif request.method == "POST":
-            username = request.POST.get("userToDelete")
+        
+        elif request.method == "POST" and "promote_button" in request.POST:
+            username = request.POST.get("userToEdit")
+            try:
+                users.getUser(username)
+                users.deleteUser(username)
+                users.giveRole(username, "admin")
+            except:
+                print("error")
+            return redirect(accounts)
+
+        elif request.method == "POST" and "demote_button" in request.POST:
+            username = request.POST.get("userToEdit")
+            try:
+                users.getUser(username)
+                users.giveRole(username, "user")
+            except:
+                print("error")
+            return redirect(accounts)
+
+        elif request.method == "POST" and "delete_button" in request.POST:
+            username = request.POST.get("userToEdit")
             try:
                 users.getUser(username)
                 users.deleteUser(username)
             except:
                 print("error")
-
             return redirect(accounts)
+
         return redirect(login)
 
 
@@ -196,7 +218,9 @@ def sessions(request):
         template = "sessions.html"
         context = {
             "title": "sessions",
+            "session": current_session,
             "sessions": all_sessions_info,
+            "user": username
         }
         return render(request, template, context)
     return redirect(login)

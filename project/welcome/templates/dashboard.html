@@ -116,6 +116,7 @@
     <li><a href="{% url 'accounts' %}">Accounts</a></li>
     <li><a href="{% url 'sessions' %}">Sessions</a></li>
     {% endif %}
+    <li><a href="{% url 'profile' %}">Profile</a></li>
     <li><a>Current Session: {{ session }}</a></li>
     <li style="float:right"><a class="active" href="{% url 'logout' %}">Sign Out</a></li>
   </ul>
@@ -167,15 +168,10 @@
           count = 50;
           clicker.removeClass('wiggle');
           var button = document.getElementById("counter");
-
-
           counter += 1;
-          
           save_counter();
           button.innerHTML = counter;
         }
-
-
         else {
           clicker.addClass('wiggle');
           clicker.css('font-size', count++ * .9 + 'px');
@@ -193,5 +189,4 @@
 
   </script>
 </body>
-
 </html>

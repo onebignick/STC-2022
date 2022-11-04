@@ -154,6 +154,11 @@
   td.text-left {
     text-align: left;
   }
+
+  .manage{
+    max-width: 600px;
+    margin: auto;
+  }
 </style>
 
 <body>
@@ -161,18 +166,24 @@
     <li><a href="{% url 'dashboard' %}">Logged in as: {{ username }}</a></li>
     <li><a class="current" href="#">Accounts</a></li>
     <li><a href="{% url 'sessions' %}">Sessions</a></li>
+    <li><a href="{% url 'profile' %}">Profile</a></li>
+    <li><a>Current Session: {{ session }}</a></li>
     <li style="float:right"><a class="active" href="{% url 'logout' %}">Sign Out</a></li>
   </ul>
   <br>
   <br>
-  <form method="POST" action="">
-    {% csrf_token %}
-    <p>Delete User</p>
-    <input name="userToDelete" type="username" class="form-control" id="userToDelete" placeholder="Username"
-      required="">
-    <button type="submit">Delete User</button>
-    
-  </form>
+  <div class="manage">
+    <form method="POST" action="">
+      {% csrf_token %}
+      <input name="userToEdit" type="username" class="form-control" id="userToEdit" placeholder="Username" required="">
+      {{ form1.as_p }}
+      <button type="submit" name="promote_button">Promote</button>
+      {{ form2.as_p }}
+      <button type="submit" name="demote_button">Demote</button>
+      {{ form3.as_p }}
+      <button type="submit" name="delete_button">Delete</button>
+    </form>
+  </div>
   <table>
     <tr>
 
