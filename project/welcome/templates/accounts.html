@@ -44,7 +44,7 @@
   }
 
   li a:hover:not(.active) {
-    background-color: #111;
+    background-color: #00a1a9;
   }
 
   .active {
@@ -158,7 +158,7 @@
 
 <body>
   <ul>
-    <li><a href="{% url 'dashboard' %}">Logged in to: {{ username }}</a></li>
+    <li><a href="{% url 'dashboard' %}">Logged in as: {{ username }}</a></li>
     <li><a class="current" href="#">Accounts</a></li>
     <li><a href="{% url 'sessions' %}">Sessions</a></li>
     <li style="float:right"><a class="active" href="{% url 'logout' %}">Sign Out</a></li>
@@ -171,6 +171,7 @@
     <input name="userToDelete" type="username" class="form-control" id="userToDelete" placeholder="Username"
       required="">
     <button type="submit">Delete User</button>
+    
   </form>
   <table>
     <tr>

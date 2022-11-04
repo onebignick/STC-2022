@@ -90,7 +90,7 @@
   }
 
   li a:hover:not(.active) {
-    background-color: #111;
+    background-color: #00a1a9;
   }
 
   .active {
@@ -111,7 +111,7 @@
 
 <body>
   <ul>
-    <li><a class="current" href="#">{{ username }}</a></li>
+    <li><a class="current" href="#">Logged in as: {{ username }}</a></li>
     {% if role == 'admin' %}
     <li><a href="{% url 'accounts' %}">Accounts</a></li>
     <li><a href="{% url 'sessions' %}">Sessions</a></li>
@@ -120,7 +120,7 @@
     <li style="float:right"><a class="active" href="{% url 'logout' %}">Sign Out</a></li>
   </ul>
   <!-- counter -->
-  <div id="counter">0</div>
+  <div id="counter"></div>
   <!-- clicker -->
   <div id="clicker">&#128051;</div>
 
@@ -147,7 +147,8 @@
     var timeout, clicker = $('#clicker');
     var count = 25;
     var counter = parseInt("{{ var_clicks }}");
-    
+    var button = document.getElementById("counter");
+    button.innerHTML = counter;
     function save_counter(){
       var_clicks = (counter).toString();
       console.log(counter);
