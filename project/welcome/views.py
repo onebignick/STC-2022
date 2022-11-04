@@ -102,6 +102,41 @@ def dashboard(request):
     return redirect(login)
 
 
+def profile(request):
+    current_session = request.COOKIES.get("session")
+    if (
+        current_session != "0x0000000000000000000000000000000000000000"
+        and users.getLoginDatetime(current_session) != 0
+        and users.getLogoutDatetime(current_session) == 0
+    ):
+        username = users.getUsername(current_session)
+        role = users.getUser(username)[2]
+        clicks = users.getUser(username)[3]
+
+        template = "profile.html"
+        context = {
+            "title": "Profile",
+            "username": username,
+            "role": role,
+            "clicks": clicks,
+        }
+        if request.method == "POST":
+            oldPassword = request.POST.get("oldPassword")
+            newPassword = request.POST.get("newPassword")
+            newPasswordConfirm = request.POST.get("newPasswordConfirm")
+            if newPassword != newPasswordConfirm:
+                context["Error"] = True
+                return render(request, template, context)
+            elif users.findPassword() != hashinfo(oldPassword):
+                context["PasswordError"] = True
+                return render(request, template, context)
+            users.changePassword(username, oldPassword, newPassword)
+            context["PasswordChanged"] = True
+            return render(request, template, context)
+        return render(request, template, context)
+    return redirect(login)
+
+
 def accounts(request):
     current_session = request.COOKIES.get("session")
     if (

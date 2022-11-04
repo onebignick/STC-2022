@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<style>
+    html {
+        height: 100%;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        background: linear-gradient(#141e30, #243b55);
+    }
+
+    #clicker {
+        position: fixed;
+        top: 50%;
+        margin-top: -30px;
+        left: 50%;
+        margin-left: -30px;
+        cursor: pointer;
+        color: #0084FF;
+        font-size: 50px;
+    }
+
+    .wiggle {
+        animation: wiggle 1.25s ease forwards;
+    }
+
+    @keyframes wiggle {
+        0% {
+            transform: rotate(-15deg);
+        }
+
+        20% {
+            transform: rotate(15deg);
+        }
+
+        40% {
+            transform: rotate(-10deg);
+        }
+
+        60% {
+            transform: rotate(10deg);
+        }
+
+        80% {
+            transform: rotate(-5deg);
+        }
+
+        80% {
+            transform: rotate(5deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    .current {
+        background: #141e30;
+    }
+
+    li a:hover:not(.active) {
+        background-color: #111;
+    }
+
+    .active {
+        background-color: #00a1a9;
+    }
+
+    .active:hover {
+        background-color: #03e9f4;
+    }
+
+    #counter {
+        font-size: 80px;
+        color: #0084FF;
+        text-align: center;
+        margin-top: 15%;
+    }
+</style>
+
+<body>
+    <ul>
+        <li><a class="current" href="#">{{ username }}</a></li>
+        {% if role == 'admin' %}
+        <li><a href="{% url 'accounts' %}">Accounts</a></li>
+        <li><a href="{% url 'sessions' %}">Sessions</a></li>
+        <li><a href="{% url 'profile' %}">Profile</a></li>
+        {% endif %}
+        <li><a>Current Session: {{ session }}</a></li>
+        <li style="float:right"><a class="active" href="{% url 'logout' %}">Sign Out</a></li>
+    </ul>
+
+    <table>
+        <tr>
+            <th class="text-left">Username</th>
+            <th class="text-left">Role</th>
+            <th class="text-left">Total Clicks</th>
+        </tr>
+        <tr>
+            <th class="text-left">{{ username }}</th>
+            <th class="text-left">{{ role }}</th>
+            <th class="text-left">{{ clicks }}</th>
+        </tr>
+    </table>
+    <p>Change Password</p>
+    {% if PasswordChanged %}
+    <small id="incorrectDetails" class="'form-text text-muted">Success! Password changed</small>
+    {% endif %}
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="user-box">
+            <input name="oldPassword" class="form-control" id="oldPassword" placeholder="Old Password" required="">
+        </div>
+        {% if PasswordError %}
+        <small id="incorrectDetails" class="'form-text text-muted">incorrect password</small>
+        {% endif %}
+        <div class="user-box">
+            <input name="newPassword" class="form-control" id="newPassword" placeholder="New Password" required="">
+        </div>
+        {% if Error %}
+        <small id="incorrectDetails" class="'form-text text-muted">Passwords do not match</small>
+        {% endif %}
+        <div class="user-box">
+            <input name="newPasswordConfirm" class="form-control" id="newPasswordConfirm"
+                placeholder="Confirm New Password" required="">
+        </div>
+        <button type="submit" class="btn btn-primary">Change Password</button>
+    </form>
+</body>
+
+</html>

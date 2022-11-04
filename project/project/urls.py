@@ -26,5 +26,6 @@ urlpatterns = [
     path("sessions/", views.sessions, name="sessions"),
     path("secure/", views.secure, name="secure"),
     path("logout/", views.logout, name="logout"),
+    path("profile/", views.profile, name="profile"),
     # path("", include("welcome.urls")),
 ]
