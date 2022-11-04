@@ -44,7 +44,7 @@
   }
 
   li a:hover:not(.active) {
-    background-color: #111;
+    background-color: #00a1a9;
   }
 
   .active {
@@ -156,7 +156,7 @@
 
 <body>
   <ul>
-    <li><a href="{% url 'dashboard' %}">BIG</a></li>
+    <li><a href="{% url 'dashboard' %}">Logged in as: {{ username }}</a></li>
     <li><a href="{% url 'accounts' %}">Accounts</a></li>
     <li><a class="current" href="#">Sessions</a></li>
     <li style="float:right"><a class="active" href="{% url 'logout' %}">Sign Out</a></li>
@@ -173,10 +173,10 @@
     </tr>
     {% for session_contract, username, login, logout in sessions %}
     <tr>
-      <th class="text-left">{{ session_contract }}</th>
-      <th class="text-left">{{ username }}</th>
-      <th class="text-left">{{ login }}</th>
-      <th class="text-left">{{ logout }}</th>
+      <td class="text-left">{{ session_contract }}</th>
+      <td class="text-left">{{ username }}</th>
+      <td class="text-left">{{ login }}</th>
+      <td class="text-left">{{ logout }}</th>
     </tr>
     {% endfor %}
   </table>
