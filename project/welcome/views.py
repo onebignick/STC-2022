@@ -38,7 +38,7 @@ def login(request):
         cj["session"] = session_address
 
         # session cookie for user, password is hashed
-        response.set_cookie("session", session_address, max_age=30*60)
+        response.set_cookie("session", session_address, max_age=30 * 60)
         return response
 
 
@@ -78,102 +78,100 @@ def signup(request):
 def dashboard(request):
     current_session = request.COOKIES.get("session")
     if (
-        current_session == "0x0000000000000000000000000000000000000000"
+        current_session != "0x0000000000000000000000000000000000000000"
         and users.getLoginDatetime(current_session) != 0
         and users.getLogoutDatetime(current_session) == 0
     ):
-        return redirect(login)
+        username = users.getUsername(current_session)
+        role = users.getUser(username)[2]
+        var_clicks = users.getUser(username)[3]
+        template = "dashboard.html"
+        context = {
+            "title": "Dashboard",
+            "username": username,
+            "session": current_session,
+            "role": role,
+            "var_clicks": var_clicks,
+        }
+        if request.method == "POST":
+            var_clicks = request.POST["var_clicks"]
+            users.updateClick(username, int(var_clicks))
+            print(var_clicks)
 
-    username = users.getUsername(current_session)
-    role = users.getUser(username)[2]
-    var_clicks = users.getUser(username)[3]
-    template = "dashboard.html"
-    context = {
-        "title": "Dashboard",
-        "username": username,
-        "session": current_session,
-        "role": role,
-        "var_clicks": var_clicks,
-    }
-    if request.method == "POST":
-        var_clicks = request.POST["var_clicks"]
-        users.updateClick(username, int(var_clicks))
-        print(var_clicks)
-
-    return render(request, template, context)
+        return render(request, template, context)
+    return redirect(login)
 
 
 def accounts(request):
     current_session = request.COOKIES.get("session")
     if (
-        current_session == "0x0000000000000000000000000000000000000000"
+        current_session != "0x0000000000000000000000000000000000000000"
         and users.getLoginDatetime(current_session) != 0
         and users.getLogoutDatetime(current_session) == 0
     ):
+
+        username = users.getUsername(current_session)
+        if users.getUser(username)[2] != "admin":
+            return redirect(login)
+
+        if request.method == "GET":
+            template = "accounts.html"
+            all_accounts = users.getAllUsers()
+            context = {
+                "title": "Accounts",
+                "username": username,
+                "all_accounts": all_accounts,
+            }
+            return render(request, template, context)
+        elif request.method == "POST":
+            username = request.POST.get("userToDelete")
+            try:
+                users.getUser(username)
+                users.deleteUser(username)
+            except:
+                print("error")
+
+            return redirect(accounts)
         return redirect(login)
-
-    username = users.getUsername(current_session)
-    if users.getUser(username)[2] != "admin":
-        return redirect(login)
-
-    if request.method == "GET":
-        template = "accounts.html"
-        all_accounts = users.getAllUsers()
-        context = {
-            "title": "Accounts",
-            "username": username,
-            "all_accounts": all_accounts,
-        }
-        return render(request, template, context)
-    elif request.method == "POST":
-        username = request.POST.get("userToDelete")
-        try:
-            users.getUser(username)
-            users.deleteUser(username)
-        except:
-            print("error")
-
-        return redirect(accounts)
 
 
 def sessions(request):
     current_session = request.COOKIES.get("session")
     if (
-        current_session == "0x0000000000000000000000000000000000000000"
+        current_session != "0x0000000000000000000000000000000000000000"
         and users.getLoginDatetime(current_session) != 0
         and users.getLogoutDatetime(current_session) == 0
     ):
-        return redirect(login)
+        username = users.getUsername(current_session)
+        if users.getUser(username)[2] != "admin":
+            return redirect(login)
 
-    username = users.getUsername(current_session)
-    if users.getUser(username)[2] != "admin":
-        return redirect(login)
-
-    all_sessions = users.getAllSessions()
-    all_sessions_info = []
-    for i in range(len(all_sessions)):
-        all_sessions_info.append(
-            (
-                all_sessions[i],
-                users.getUsername(all_sessions[i]),
-                users.getLoginDatetime(all_sessions[i]),
-                users.getLogoutDatetime(all_sessions[i]),
+        all_sessions = users.getAllSessions()
+        all_sessions_info = []
+        for i in range(len(all_sessions)):
+            all_sessions_info.append(
+                (
+                    all_sessions[i],
+                    users.getUsername(all_sessions[i]),
+                    users.getLoginDatetime(all_sessions[i]),
+                    users.getLogoutDatetime(all_sessions[i]),
+                )
             )
-        )
 
-    template = "sessions.html"
-    context = {
-        "title": "sessions",
-        "sessions": all_sessions_info,
-    }
-    return render(request, template, context)
+        template = "sessions.html"
+        context = {
+            "title": "sessions",
+            "sessions": all_sessions_info,
+        }
+        return render(request, template, context)
+    return redirect(login)
 
 
 def logout(request):
     session = request.COOKIES.get("session")
     print(users.logout(users.getUsername(session), session))
     response = redirect(login)
-    response.delete_cookie("session") # delete cookie on session exit 
+    response.delete_cookie("session")  # delete cookie on session exit
     return response
 
 
