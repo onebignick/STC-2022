@@ -53,7 +53,9 @@ Start the django server in order to access the webpage.
 py manage.py runserver
 ```
 
-A default admin user will be created. Username: admin Password: root
+A default admin user will be created.
+Username: admin
+Password: root
 
 Feel free to test out the application
 
@@ -72,7 +74,7 @@ contract Session {
     string public user;
     uint256 public login_datetime = 0;
     uint256 public logout_datetime = 0;
-}
+    }
 ```
 
 ##### Constructor
@@ -83,16 +85,84 @@ Constructor function to initialise session contract, requires a username and log
 constructor(string memory username, uint256 login) {
         user = username;
         login_datetime = login;
-}
+    }
 ```
+
+##### LogoutSession
+
+Function to store the logout date when user logs out of a current session.
 
 ```solidity
 function logoutSession(uint256 logout) public {
         logout_datetime = logout;
-}
+    }
 ```
-#####
+#### Users
+
+Smart contract to store data of each individual user. Each user contains, username, password, role and click.
+
+```solidity
+struct UserData {
+        string user;
+        string password;
+        string role;
+        uint256 click;
+    }
+```
+
+##### Constructor
+
+Constructs the smart contract to interact with. Is already called when deploy.py is run.
+
+```solidity
+constructor() {}
+```
+
+##### getUser(Username)
+
+Gets the data of an individual user. Returns a tuple with (user, password, role, click)
+
+```solidity
+    function getUser(string memory key) public view
+        returns (
+            string memory user,
+            string memory password,
+            string memory role,
+            uint256 click
+        )
+    {
+        return (
+            users[key].user,
+            users[key].password,
+            users[key].role,
+            users[key].click
+        );
+    }
+```
+
+##### login(username, password)
+
+Login function to facilitate authentication of users. Compares hashed input value to that stored on the blockchain. Emits and event based on whether the login was successful. Creates a new session contract if the login was successful.
+
+```solidity
+    function login(string memory user, string memory password) public {
+        bool result = compareStrings(users[user].password, password);
+
+        if (result) {
+            Session session = new Session(user, block.timestamp);
+            sessions[user].push(address(session));
+            session_lookup.push(address(session));
+            emit LoginEvent(address(session));
+        } else {
+            emit LoginEvent(address(0));
+        }
+    }
+```
+
+
 ### functions.py
+
+
 
 
 
