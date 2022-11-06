@@ -6,6 +6,7 @@ from pathlib import Path
 from solcx import compile_standard, install_solc
 from web3.middleware import geth_poa_middleware
 import functions as users
+import wallet_details
 
 p = Path(__file__).with_name("db.sol")
 
@@ -59,12 +60,8 @@ if chain_id == 11155111:  # Sepolia chain ID is 11155111
     w3.middleware_onion.inject(geth_poa_middleware, layer=0)
     print(w3.clientVersion)
 
-# my_address = "0x1667a684E0bD33EdeCf74EE86B52835312bd7eEA"
-# private_key = "c9544cafe50f0cebcb512535e6a902fcae5ecddf7c5fd832d39ef2e645a6be56"
-
-# jons add and key
-my_address ="0xE5ce067301e150F27F50Eb58ae078A80ab987183"
-private_key ="36230e823372730c5225d10470fef124aaa6a1a2f4286f78b5eba097c8af0653"
+my_address = wallet_details.my_address
+private_key = wallet_details.private_key
 
 # Creating the users contract in python
 db = w3.eth.contract(abi=users_abi, bytecode=users_bytecode)
@@ -91,9 +88,9 @@ tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 print(f"Done! Contract deployed to {tx_receipt.contractAddress}")
 
 # Erase any exisiting data in the file
-f = open("./project/welcome/contractaddress.txt", "w")
+f = open("./welcome/contractaddress.txt", "w")
 f.close()
 
 # write Users contract address
-f = open("./project/welcome/contractaddress.txt", "w")
+f = open("./welcome/contractaddress.txt", "w")
 f.write(tx_receipt.contractAddress)

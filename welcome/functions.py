@@ -6,6 +6,7 @@ from pathlib import Path
 from hashlib import sha512
 from solcx import compile_standard, install_solc
 from web3.middleware import geth_poa_middleware
+import welcome.wallet_details as wallet_details
 
 p = Path(__file__).with_name("db.sol")
 
@@ -71,8 +72,8 @@ if chain_id == 11155111:  # Sepolia chain ID is 11155111
 # private_key = "8ce2763ff0b066ca62ee7e35f6c1e6db977954f1cdaecacf902dc9c3744bd942"
 
 # jons add and key
-my_address = "0xE5ce067301e150F27F50Eb58ae078A80ab987183"
-private_key = "36230e823372730c5225d10470fef124aaa6a1a2f4286f78b5eba097c8af0653"
+my_address = wallet_details.my_address
+private_key = wallet_details.private_key
 
 # Get contract address of deployed contract
 p = Path(__file__).with_name("contractaddress.txt")
