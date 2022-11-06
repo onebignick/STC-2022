@@ -42,7 +42,7 @@ Choose any of the wallets to use as the deployer wallet. Copy and paste the addr
 Start the project by running *deploy.py* it is located at ./welcome/deploy.
 
 ```bash
-./welcome/deploy
+/welcome/deploy.py
 ```
 
 ### Running the django server
@@ -140,9 +140,109 @@ Gets the data of an individual user. Returns a tuple with (user, password, role,
     }
 ```
 
+##### getAllUsers()
+
+Returns all users data in the form of tuples in an array.
+
+```solidity
+function getAllUsers() public view returns (UserData[] memory) {
+    UserData[] memory allUsers = new UserData[](lookup.length);
+    for (uint256 i = 0; i < lookup.length; i++) {
+        allUsers[i] = users[lookup[i]];
+    }
+    return allUsers;
+}
+```
+
+##### getAllSessions()
+
+Returns all session contracts past and present in an array.
+
+```solidity
+function getAllSessions() public view returns (address[] memory) {
+    address[] memory allSessions = new address[](session_lookup.length);
+    for (uint256 i = 0; i < session_lookup.length; i++) {
+        allSessions[i] = session_lookup[i];
+    }
+    return allSessions;
+}
+```
+
+##### addUser(user, password)
+
+Function that adds a user to the password, first checks if the user already exists in the blockchain. Returns an error if it already exists. Else new user is created and pushed into the lookup table.
+
+```solidity
+function addUser(string memory user, string memory password) public {
+    require(compareStrings(users[user].user, ""), "User already exists.");
+    string memory role = "user";
+    uint256 click = 0;
+    UserData memory newUser = UserData(user, password, role, click);
+    users[user] = newUser;
+    lookup.push(user);
+}
+```
+
+##### deleteUser(username)
+
+Function that deletes a user from the lookup table, deleting the user.
+
+```solidity
+function deleteUser(string memory user) public {
+    delete users[user];
+    for (uint256 i = 0; i < lookup.length; i++) {
+        if (compareStrings(lookup[i], user)) {
+            lookup[i] = lookup[lookup.length - 1];
+            lookup.pop();
+        }
+    }
+}
+```
+
+##### updateUser(user, role)
+
+Function that gives a user a new role
+
+```soldiity
+function updateUser(string memory user, string memory role) public {
+    UserData storage updated = users[user];
+    users[user].role = role;
+    users[user] = updated;
+}
+```
+
+##### updateUserClicks(user, click)
+
+Function that updates the clicks that the user has made
+
+```solidity
+function updateUserClicks(string memory user, uint256 click) public {
+    UserData storage updated = users[user];
+    users[user].click = click;
+    users[user] = updated;
+}
+```
+
+##### updatePassword(user, old_password, new_password)
+
+Function that updates the password of an existing user
+
+```solidity
+function updatePassword(
+    string memory user,
+    string memory old_password,
+    string memory new_password
+) public {
+    require(
+        compareStrings(old_password, users[user].password),
+        "Wrong password"
+    );
+    users[user].password = new_password;
+}
+```
 ##### login(username, password)
 
-Login function to facilitate authentication of users. Compares hashed input value to that stored on the blockchain. Emits and event based on whether the login was successful. Creates a new session contract if the login was successful.
+Login function to facilitate authentication of users. Compares hashed input value to that stored on the blockchain. Emits and event based on whether the login was successful. Creates a new session contract if the login was successful. Pushes user into the active session list.
 
 ```solidity
     function login(string memory user, string memory password) public {
@@ -159,8 +259,27 @@ Login function to facilitate authentication of users. Compares hashed input valu
     }
 ```
 
+##### logout(username, session)
 
-### functions.py
+Logout function to facilitate authentication of users. Calls the user's session.logoutSession to log user out on the blockchain. Afterwards pops user out of the active session list.
+
+```solidity
+function logout(string memory user, address session) public returns (bool) {
+    address[] storage sessionList = sessions[user];
+    for (uint256 i = 0; i < sessionList.length; i++) {
+        if (sessionList[i] == session) {
+            Session(sessionList[i]).logoutSession(block.timestamp);
+            sessionList[i] = sessionList[sessionList.length - 1];
+            sessionList.pop();
+            emit LogoutEvent("logout successful");
+            return true;
+        }
+    }
+
+    emit LogoutEvent("logout failed");
+    return false;
+}
+```
 
 
 
