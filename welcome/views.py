@@ -165,7 +165,6 @@ def accounts(request):
             username = request.POST.get("userToEdit")
             try:
                 users.getUser(username)
-                users.deleteUser(username)
                 users.giveRole(username, "admin")
             except:
                 print("error")
