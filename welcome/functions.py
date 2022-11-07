@@ -65,13 +65,6 @@ if chain_id == 11155111:  # Sepolia chain ID is 11155111
     w3.middleware_onion.inject(geth_poa_middleware, layer=0)
     print(w3.clientVersion)
 
-# my_address = "0x1667a684E0bD33EdeCf74EE86B52835312bd7eEA"
-# private_key = "c9544cafe50f0cebcb512535e6a902fcae5ecddf7c5fd832d39ef2e645a6be56"
-
-# my_address = "0x545AFcA9a28c42e08D670fe72B69376213fbEDa3"
-# private_key = "8ce2763ff0b066ca62ee7e35f6c1e6db977954f1cdaecacf902dc9c3744bd942"
-
-# jons add and key
 my_address = wallet_details.my_address
 private_key = wallet_details.private_key
 

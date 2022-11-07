@@ -5,7 +5,6 @@ from web3 import Web3
 from pathlib import Path
 from solcx import compile_standard, install_solc
 from web3.middleware import geth_poa_middleware
-import functions as users
 import wallet_details
 
 p = Path(__file__).with_name("db.sol")
