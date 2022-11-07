@@ -12,6 +12,7 @@ Use the package manager [pip] (https://pip.pypa.io/en/stable/) to install the pr
 pip install django
 pip install py-solc-x
 pip install web3
+pip install pytz
 ```
 
 ### Ganache
