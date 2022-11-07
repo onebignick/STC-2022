@@ -59,7 +59,28 @@ A default admin user will be created.
 Username: admin
 Password: root
 
-Feel free to test out the application
+
+### Session management
+
+Upon logging in, the user's session contract address is stored in a cookie. We configured the session to be valid for 30 mins before the user is auto logged out or upon closing of the tab.
+
+### Directories
+
+**Dashboard**
+
+Note that each pass of the whale sends an individual transaction to the blockchain. Will crash if 2 transactions are done at the same time.
+
+**Accounts**
+
+Displays all the valid accounts that are currently stored on the blockchain. Only avaliable to users with admin role. Allows admin to give roles as well as delete users.
+
+**Sessions**
+
+Displays all sessions including login date and login time. Only avaliable to users with admin role.
+
+**Profile**
+
+Allows user to change their password. Avaliable to everybody.
 
 ## Documentation
 
