@@ -4,6 +4,8 @@ from hashlib import sha512
 # Django imports here
 from django.shortcuts import render, redirect, HttpResponse
 from django.urls import reverse
+from datetime import datetime
+import pytz
 
 # Initialise the cookie jar
 cj = {}  # primitive cookie jar
@@ -204,13 +206,23 @@ def sessions(request):
 
         all_sessions = users.getAllSessions()
         all_sessions_info = []
+
         for i in range(len(all_sessions)):
+            loginDateTime = users.getLoginDatetime(all_sessions[i])
+            login_obj = datetime.fromtimestamp(loginDateTime)
+            
+
+            logoutDateTime = users.getLogoutDatetime(all_sessions[i])
+            logout_obj = "Logged in"
+            if (logoutDateTime != 0):
+                logout_obj = datetime.fromtimestamp(logoutDateTime)
+            
             all_sessions_info.append(
                 (
                     all_sessions[i],
                     users.getUsername(all_sessions[i]),
-                    users.getLoginDatetime(all_sessions[i]),
-                    users.getLogoutDatetime(all_sessions[i]),
+                    login_obj,
+                    logout_obj,
                 )
             )
 
