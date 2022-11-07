@@ -1,11 +1,12 @@
 # STC-2022
-Go Big Mode - Our project for Stack The Codes 2022
+Go Big Mode - Our project for Stack The Codes 2022.
 
+Go Big Mode (GBM) is a decentralised user ID management system. Users are entered into the system via peer-to-peer validation and the data is stored on the blockchain. GBM currently supports creation of user profiles, updating of user password and clicks on the whale, user roles, sessions and deletion of users.
 
 ## Setting Up
 
 ### Pip Modules
-Use the package maanager [pip] (https://pip.pypa.io/en/stable/) to install the prequisites found in requirements.txt
+Use the package manager [pip] (https://pip.pypa.io/en/stable/) to install the prequisites found in requirements.txt
 
 ```bash
 pip install django
